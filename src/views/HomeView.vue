@@ -182,9 +182,9 @@ const fetchDailyProgress = async () => {
   try {
     const { data } = await api.get('/diary');
     percentage.value = data.percentage.calories;
-    console.log('Percentage:', percentage.value);
   } catch (err) {
     console.error('Failed to fetch daily progress:', err);
+    console.error(err);
     // Set default value jika gagal
     percentage.value = 0;
   }
