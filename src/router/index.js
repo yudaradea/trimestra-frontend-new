@@ -15,7 +15,7 @@ import HelpView from '@/views/HelpView.vue';
 import DiaryView from '@/views/DiaryView.vue';
 import FoodSelectView from '@/views/FoodSelectView.vue';
 import ExerciseSelectView from '@/views/ExerciseSelectView.vue';
-import notFound from '@/errorPages/notFound.vue';
+import NotFound from '@/errorPages/NotFound.vue';
 import Unauthorize from '@/errorPages/Unauthorize.vue';
 import Forbidden from '@/errorPages/Forbidden.vue';
 
@@ -115,7 +115,7 @@ const routes = [
   // error pages
   { path: '/401', name: 'Unauthorized', component: Unauthorize },
   { path: '/403', name: 'Forbidden', component: Forbidden },
-  { path: '/:pathMatch(.*)*', name: 'NotFound', component: notFound }, // catch-all
+  { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound }, // catch-all
 ];
 
 const router = createRouter({

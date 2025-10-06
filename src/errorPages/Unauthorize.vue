@@ -1,4 +1,3 @@
-<!-- src/pages/Unauthorized.vue -->
 <template>
   <ErrorPage
     code="401"

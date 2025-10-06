@@ -1,4 +1,3 @@
-<!-- src/pages/NotFound.vue -->
 <template>
   <ErrorPage
     code="404"

@@ -1,4 +1,3 @@
-<!-- src/pages/Forbidden.vue -->
 <template>
   <ErrorPage
     code="403"
