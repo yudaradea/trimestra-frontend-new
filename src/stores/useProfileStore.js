@@ -26,7 +26,7 @@ export const useProfileStore = defineStore('profile', () => {
     loading.value = true;
     error.value = null;
     try {
-      const response = await api.post('/profile-update', payload); // ✅ pakai instance api
+      const response = await api.post('/ganti-profil', payload); // ✅ pakai instance api
       profile.value = response.data.data;
       return response.data;
     } catch (err) {
