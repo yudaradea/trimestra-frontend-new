@@ -235,7 +235,7 @@ const fetchUserExercises = async (append = false) => {
     const params = { row_per_page: rowPerPage, page: userExercisePage.value };
     const res = await api.get('/user-exercise/all/paginated', { params });
     const items = res.data.data.data || res.data.data;
-    console.log(items);
+
     if (append) userExercises.value = [...userExercises.value, ...items];
     else userExercises.value = items;
     const pagination = res.data.data;

@@ -15,6 +15,9 @@ import HelpView from '@/views/HelpView.vue';
 import DiaryView from '@/views/DiaryView.vue';
 import FoodSelectView from '@/views/FoodSelectView.vue';
 import ExerciseSelectView from '@/views/ExerciseSelectView.vue';
+import notFound from '@/errorPages/notFound.vue';
+import Unauthorize from '@/errorPages/Unauthorize.vue';
+import Forbidden from '@/errorPages/Forbidden.vue';
 
 const routes = [
   {
@@ -107,6 +110,23 @@ const routes = [
     name: 'exercise-select',
     component: ExerciseSelectView,
     meta: { requiresAuth: true },
+  },
+
+  // error pages
+  {
+    path: '/:catchAll(.*)',
+    name: 'not-found',
+    component: notFound,
+  },
+  {
+    path: '/unauthorize',
+    name: 'unauthorize',
+    component: Unauthorize,
+  },
+  {
+    path: '/forbidden',
+    name: 'forbidden',
+    component: Forbidden,
   },
 ];
 
