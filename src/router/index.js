@@ -113,21 +113,9 @@ const routes = [
   },
 
   // error pages
-  {
-    path: '/:catchAll(.*)',
-    name: 'not-found',
-    component: notFound,
-  },
-  {
-    path: '/unauthorize',
-    name: 'unauthorize',
-    component: Unauthorize,
-  },
-  {
-    path: '/forbidden',
-    name: 'forbidden',
-    component: Forbidden,
-  },
+  { path: '/401', name: 'Unauthorized', component: Unauthorize },
+  { path: '/403', name: 'Forbidden', component: Forbidden },
+  { path: '/:pathMatch(.*)*', name: 'NotFound', component: notFound }, // catch-all
 ];
 
 const router = createRouter({
