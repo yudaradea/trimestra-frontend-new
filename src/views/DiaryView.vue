@@ -346,6 +346,7 @@ const fetchFoodDiary = async () => {
     foodDiary.value = data.data; // array of {id, type, items: []}
   } catch (err) {
     toast.error('Gagal memuat makanan');
+    console.error(err);
   }
 };
 
@@ -366,6 +367,7 @@ const deleteDiaryItem = async (itemId) => {
     fetchDiary(); // refresh summary juga
   } catch (err) {
     toast.error('Gagal menghapus item');
+    console.error(err);
   }
 };
 
