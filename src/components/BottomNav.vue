@@ -1,13 +1,13 @@
 <template>
   <nav
-    class="fixed bottom-0 left-0 right-0 z-50 max-w-md mx-auto bg-white border-t border-gray-200"
+    class="fixed bottom-0 left-0 right-0 z-40 max-w-md mx-auto bg-white border-t border-gray-200"
   >
     <div class="flex justify-around py-2">
       <router-link
         v-for="item in menuItems"
         :key="item.to"
         :to="item.to"
-        class="flex flex-col items-center p-2"
+        class="flex flex-col items-center"
         :class="isActive(item.to) ? 'text-emerald-600' : 'text-gray-500'"
       >
         <component :is="item.icon" class="w-6 h-6" />

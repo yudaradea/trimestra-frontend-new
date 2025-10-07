@@ -49,6 +49,7 @@
                 type="checkbox"
                 v-model="selectedUserFoods"
                 :value="food"
+                @change="handleFoodSelect(food, true)"
                 class="w-5 h-5 mr-3 border-gray-300 rounded-full text-primary focus:ring-primary"
               />
               <div>
@@ -77,9 +78,18 @@
           </div>
 
           <!-- Tambah baru -->
+          <!-- Load More -->
+          <div v-if="hasMoreUserFoods" class="p-4 my-4">
+            <button
+              @click="loadMoreUserFoods"
+              class="w-full py-2 font-medium text-gray-700 bg-gray-100 rounded-lg"
+            >
+              Load More
+            </button>
+          </div>
           <button
             @click="openUserFoodModal"
-            class="w-full py-2 mt-2 text-white rounded-lg bg-primary"
+            class="w-full py-2 mt-4 text-white rounded-lg bg-primary"
           >
             + Tambah Makanan Saya
           </button>
@@ -125,6 +135,7 @@
               type="checkbox"
               v-model="selectedAdminFoods"
               :value="food"
+              @change="handleFoodSelect(food, false)"
               class="w-5 h-5 mr-3 border-gray-300 rounded-full text-primary focus:ring-primary"
             />
             <div>
@@ -136,16 +147,66 @@
             </div>
           </label>
         </div>
+        <!-- Load More -->
+        <div v-if="hasMore" class="p-4">
+          <button
+            @click="loadMore"
+            class="w-full py-2 font-medium text-gray-700 bg-gray-100 rounded-lg"
+          >
+            Load More
+          </button>
+        </div>
       </div>
 
-      <!-- Load More -->
-      <div v-if="hasMore" class="p-4">
-        <button
-          @click="loadMore"
-          class="w-full py-2 font-medium text-gray-700 bg-gray-100 rounded-lg"
+      <!-- list selected -->
+
+      <div v-if="selectedFoodsPreview.length > 0" class="p-4 space-y-4">
+        <h3 class="text-lg font-semibold">Makanan yang akan ditambahkan</h3>
+
+        <div
+          v-for="item in selectedFoodsPreview"
+          :key="item.id + '-' + item.isUserFood"
+          class="p-3 space-y-1 border rounded-lg"
         >
-          Load More
-        </button>
+          <div class="grid items-center grid-cols-12">
+            <div class="col-span-11">
+              <h4 class="font-medium">{{ item.name }}</h4>
+              <p class="text-xs text-gray-500">
+                {{ item.quantity }} porsi — {{ item.calories.toFixed(1) }} kcal,
+                {{ item.protein.toFixed(1) }}g protein,
+                {{ item.fat.toFixed(1) }}g lemak,
+                {{ item.carbohydrates.toFixed(1) }}g karbo
+              </p>
+
+              <div class="mt-2">
+                <input
+                  type="number"
+                  v-model.number="item.quantity"
+                  min="1"
+                  @change="updateQuantity(item)"
+                  class="w-12 px-2 py-1 text-sm border rounded"
+                />
+                <span class="ml-2 text-xs text-gray-500">Edit porsi</span>
+              </div>
+            </div>
+
+            <button
+              @click="removeSelectedFood(item)"
+              class="col-span-1 text-sm text-red-500 hover:underline"
+            >
+              <i class="text-xl ri-delete-bin-line"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="pt-2 border-t">
+          <p class="text-sm font-medium">
+            Total: {{ totalNutrition.calories.toFixed(1) }} kcal,
+            {{ totalNutrition.protein.toFixed(1) }}g protein,
+            {{ totalNutrition.fat.toFixed(1) }}g lemak,
+            {{ totalNutrition.carbohydrates.toFixed(1) }}g karbo
+          </p>
+        </div>
       </div>
 
       <!-- Tombol Submit -->
@@ -153,6 +214,10 @@
         <button
           @click="submitSelectedFoods"
           class="w-full py-3 text-white rounded-lg bg-primary"
+          :disabled="selectedFoodsPreview.length === 0"
+          :class="{
+            'opacity-50 cursor-not-allowed': selectedFoodsPreview.length === 0,
+          }"
         >
           Tambahkan ke Diary
         </button>
@@ -210,11 +275,30 @@
         </button>
       </form>
     </Modal>
+
+    <Modal :show="showQuantityModal" @close="closeQuantityModal">
+      <template #title>Jumlah Porsi</template>
+      <div class="space-y-4">
+        <p class="text-gray-700">
+          Berapa banyak porsi untuk <strong>{{ selectedFood?.name }}</strong
+          >?
+        </p>
+        <input type="number" v-model="quantity" min="1" class="input" />
+        <div class="text-right">
+          <button
+            @click="confirmQuantitySelection"
+            class="px-4 py-2 text-white rounded-lg bg-primary hover:bg-teal-600"
+          >
+            Tambahkan
+          </button>
+        </div>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import api from '@/lib/axios';
 import Header from '@/components/Header.vue';
 import Modal from '@/components/Modal.vue';
@@ -405,6 +489,9 @@ const deleteUserFood = async (id) => {
 };
 
 // quantity modal
+const selectedUserFoodQuantities = ref({});
+const selectedAdminFoodQuantities = ref({});
+
 const openQuantityModal = (food, fromUser) => {
   selectedFood.value = food;
   isUserFood.value = fromUser;
@@ -412,8 +499,104 @@ const openQuantityModal = (food, fromUser) => {
   showQuantityModal.value = true;
 };
 
+const handleFoodSelect = (food, fromUser) => {
+  const isSelected = fromUser
+    ? selectedUserFoods.value.includes(food)
+    : selectedAdminFoods.value.includes(food);
+
+  if (isSelected) {
+    openQuantityModal(food, fromUser);
+  } else {
+    // kalau user uncheck, hapus dari quantity map
+    const id = food.id;
+    if (fromUser) {
+      delete selectedUserFoodQuantities.value[id];
+    } else {
+      delete selectedAdminFoodQuantities.value[id];
+    }
+  }
+};
+
 const closeQuantityModal = () => {
   showQuantityModal.value = false;
+};
+
+const confirmQuantitySelection = () => {
+  const id = selectedFood.value.id;
+  const qty = quantity.value;
+
+  if (isUserFood.value) {
+    selectedUserFoodQuantities.value[id] = qty;
+  } else {
+    selectedAdminFoodQuantities.value[id] = qty;
+  }
+
+  showQuantityModal.value = false;
+};
+
+// list selected foods
+const selectedFoodsPreview = computed(() => {
+  const user = selectedUserFoods.value.map((f) => ({
+    id: f.id,
+    name: f.name,
+    calories: f.calories * (selectedUserFoodQuantities.value[f.id] || 1),
+    protein: f.protein * (selectedUserFoodQuantities.value[f.id] || 1),
+    fat: f.fat * (selectedUserFoodQuantities.value[f.id] || 1),
+    carbohydrates:
+      f.carbohydrates * (selectedUserFoodQuantities.value[f.id] || 1),
+    quantity: selectedUserFoodQuantities.value[f.id] || 1,
+    isUserFood: true,
+  }));
+
+  const admin = selectedAdminFoods.value.map((f) => ({
+    id: f.id,
+    name: f.name,
+    calories: f.calories * (selectedAdminFoodQuantities.value[f.id] || 1),
+    protein: f.protein * (selectedAdminFoodQuantities.value[f.id] || 1),
+    fat: f.fat * (selectedAdminFoodQuantities.value[f.id] || 1),
+    carbohydrates:
+      f.carbohydrates * (selectedAdminFoodQuantities.value[f.id] || 1),
+    quantity: selectedAdminFoodQuantities.value[f.id] || 1,
+    isUserFood: false,
+  }));
+
+  return [...user, ...admin];
+});
+
+const totalNutrition = computed(() => {
+  return selectedFoodsPreview.value.reduce(
+    (acc, item) => {
+      acc.calories += item.calories;
+      acc.protein += item.protein;
+      acc.fat += item.fat;
+      acc.carbohydrates += item.carbohydrates;
+      return acc;
+    },
+    { calories: 0, protein: 0, fat: 0, carbohydrates: 0 }
+  );
+});
+
+const removeSelectedFood = (item) => {
+  if (item.isUserFood) {
+    selectedUserFoods.value = selectedUserFoods.value.filter(
+      (f) => f.id !== item.id
+    );
+    delete selectedUserFoodQuantities.value[item.id];
+  } else {
+    selectedAdminFoods.value = selectedAdminFoods.value.filter(
+      (f) => f.id !== item.id
+    );
+    delete selectedAdminFoodQuantities.value[item.id];
+  }
+};
+
+const updateQuantity = (item) => {
+  const qty = item.quantity;
+  if (item.isUserFood) {
+    selectedUserFoodQuantities.value[item.id] = qty;
+  } else {
+    selectedAdminFoodQuantities.value[item.id] = qty;
+  }
 };
 
 const submitSelectedFoods = async () => {
@@ -429,11 +612,11 @@ const submitSelectedFoods = async () => {
     const items = [
       ...selectedUserFoods.value.map((f) => ({
         user_food_id: f.id,
-        quantity: 1,
+        quantity: selectedUserFoodQuantities.value[f.id] || 1,
       })),
       ...selectedAdminFoods.value.map((f) => ({
         food_id: f.id,
-        quantity: 1,
+        quantity: selectedAdminFoodQuantities.value[f.id] || 1,
       })),
     ];
 

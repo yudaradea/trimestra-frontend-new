@@ -13,8 +13,12 @@ import SettingPasswordView from '@/views/SettingPasswordView.vue';
 import TermsView from '@/views/TermsView.vue';
 import HelpView from '@/views/HelpView.vue';
 import DiaryView from '@/views/DiaryView.vue';
+import FoodView from '@/views/FoodView.vue';
 import FoodSelectView from '@/views/FoodSelectView.vue';
 import ExerciseSelectView from '@/views/ExerciseSelectView.vue';
+import ExerciseView from '@/views/ExerciseView.vue';
+import ExerciseDetailView from '@/views/ExerciseDetailView.vue';
+
 import NotFound from '@/errorPages/NotFound.vue';
 import Unauthorize from '@/errorPages/Unauthorize.vue';
 import Forbidden from '@/errorPages/Forbidden.vue';
@@ -97,6 +101,26 @@ const routes = [
     path: '/diary',
     name: 'diary',
     component: DiaryView,
+    meta: { requiresAuth: true },
+  },
+
+  {
+    path: '/food',
+    name: 'food',
+    component: FoodView,
+    meta: { requiresAuth: true },
+  },
+
+  {
+    path: '/exercise',
+    name: 'exercise',
+    component: ExerciseView,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/exercise/:id',
+    name: 'exercise-detail',
+    component: ExerciseDetailView,
     meta: { requiresAuth: true },
   },
   {

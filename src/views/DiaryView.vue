@@ -13,6 +13,23 @@
 
     <!-- Content -->
     <div v-else class="px-4 py-6 space-y-6">
+      <!-- icon + untuk tambah data -->
+      <div class="flex items-center justify-end mr-3 space-x-2">
+        <div
+          class="flex items-center justify-center w-6 h-6 rounded-full shadow cursor-pointer bg-primary"
+          @click="openModal = true"
+        >
+          <i class="text-xl text-white ri-add-line"></i>
+        </div>
+      </div>
+
+      <div class="my-4 text-center" v-if="diary.percentage.calories > 100">
+        <!-- jika percentage lebih dari 100 -->
+        <p class="text-sm italic text-red-500">
+          Kamu melebihi jumlah asupan kalori yang dibutuhkan
+        </p>
+      </div>
+
       <!-- Ringkasan Kalori -->
       <div class="flex items-center justify-between">
         <!-- Taken -->
@@ -41,7 +58,7 @@
               stroke-linecap="round"
               stroke="currentColor"
               fill="none"
-              :stroke-dasharray="`${diary.percentage.calories}, 100`"
+              :stroke-dasharray="`${percentages}, 100`"
               d="M18 2a16 16 0 1 1 0 32 16 16 0 1 1 0-32"
             />
           </svg>
@@ -240,6 +257,37 @@
 
     <BottomNav />
   </div>
+
+  <Modal :show="openModal" @close="openModal = false">
+    <div class="my-4">
+      <div
+        v-for="section in sections"
+        :key="section.key"
+        class="flex flex-col gap-4"
+      >
+        <RouterLink
+          v-if="section.key !== 'exercise'"
+          :to="{
+            name: 'food-select',
+            query: { type: typeMap[section.key], date: diaryDate },
+          }"
+          class="w-full p-4 mb-2 text-sm text-gray-800 border rounded-xl bg-primary/5"
+        >
+          + {{ section.label }}
+        </RouterLink>
+        <RouterLink
+          v-else
+          :to="{
+            name: 'exercise-select',
+            query: { date: diaryDate },
+          }"
+          class="w-full p-4 text-sm border text-gray-800 rounded-xl bg-[#FFF2F0]"
+        >
+          + {{ section.label }}
+        </RouterLink>
+      </div>
+    </div>
+  </Modal>
 </template>
 
 <script setup>
@@ -249,12 +297,14 @@ import api from '@/lib/axios';
 import Header from '@/components/Header.vue';
 import BottomNav from '@/components/BottomNav.vue';
 import { useToast } from 'vue-toastification';
+import Modal from '@/components/Modal.vue';
 
 const toast = useToast();
 const loading = ref(true);
 const diary = ref(null); // summary dari /diary
 const foodDiary = ref([]); // detail makanan dari /food-diary
 const currentDate = ref(new Date());
+const percentages = ref(0);
 
 // Nutrisi
 const nutrients = [
@@ -294,6 +344,8 @@ const formattedDate = computed(() =>
   })
 );
 
+const openModal = ref(false);
+
 // Cek hari ini
 const isToday = computed(() => {
   const today = new Date();
@@ -331,6 +383,11 @@ const fetchDiary = async () => {
     const dateStr = formatDate(currentDate.value);
     const { data } = await api.get(`/diary?date=${dateStr}`);
     diary.value = data;
+    // jika data percentage minus, set ke 0
+    if (data.percentage.calories < 0) percentages.value = 0;
+
+    // jika data percentage lebih dari 100, set ke 100
+    if (data.percentage.calories > 100) percentages.value = 100;
   } catch (err) {
     toast.error('Gagal memuat diary');
   } finally {

@@ -14,46 +14,6 @@
     <!-- Content -->
     <div v-else>
       <!-- Tombol Tambah User Exercise -->
-      <div class="p-4">
-        <button
-          @click="openUserExerciseModal()"
-          class="w-full py-3 text-white rounded-lg shadow-md bg-primary"
-        >
-          + Tambah Exercise Saya
-        </button>
-      </div>
-
-      <!-- Exercise Bawaan -->
-      <div class="p-4">
-        <h3 class="mb-2 font-semibold">Exercise Tersedia</h3>
-        <div
-          v-for="ex in exercises"
-          :key="ex.id"
-          class="p-3 mb-2 border rounded-lg"
-        >
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="font-medium">{{ ex.name }}</p>
-              <p class="text-xs text-gray-500">
-                {{ ex.calories_burned_per_minute }} kcal / menit
-              </p>
-            </div>
-            <button
-              @click="selectExercise(ex, false)"
-              class="px-3 py-1 text-sm text-white rounded-lg bg-primary"
-            >
-              Pilih
-            </button>
-          </div>
-        </div>
-        <button
-          v-if="hasMoreExercises"
-          @click="loadMoreExercises"
-          class="w-full py-2 text-white rounded-lg bg-primary"
-        >
-          Load More
-        </button>
-      </div>
 
       <!-- User Exercise -->
       <div class="p-4">
@@ -101,6 +61,49 @@
         </button>
       </div>
 
+      <div class="p-4">
+        <button
+          @click="openUserExerciseModal()"
+          class="w-full py-3 text-white rounded-lg shadow-md bg-primary"
+        >
+          + Tambah Exercise Saya
+        </button>
+      </div>
+
+      <!-- Exercise Bawaan -->
+      <div class="p-4">
+        <h3 class="mb-2 font-semibold">Exercise Tersedia</h3>
+        <div
+          v-for="ex in exercises"
+          :key="ex.id"
+          class="p-3 mb-2 border rounded-lg"
+        >
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="font-medium">{{ ex.name }}</p>
+              <p class="text-xs text-gray-500">
+                {{ ex.calories_burned_per_minute }} kcal / menit
+              </p>
+            </div>
+            <button
+              @click="selectExercise(ex, false)"
+              class="px-3 py-1 text-sm text-white rounded-lg bg-primary"
+            >
+              Pilih
+            </button>
+          </div>
+        </div>
+        <button
+          v-if="hasMoreExercises"
+          @click="loadMoreExercises"
+          class="w-full py-2 text-white rounded-lg bg-primary"
+        >
+          Load More
+        </button>
+      </div>
+    </div>
+
+    <Modal :show="openSelectedModal" @close="openSelectedModal = false">
       <!-- Input Durasi -->
       <div v-if="selectedExercise" class="p-4">
         <div class="p-3 border rounded-lg">
@@ -111,6 +114,7 @@
             v-model.number="duration"
             type="number"
             placeholder="Durasi (menit)"
+            min="1"
             class="w-full p-2 mb-2 border rounded-lg"
           />
           <p class="mb-2 text-sm text-gray-500">
@@ -126,7 +130,7 @@
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
 
     <!-- Modal Tambah/Edit User Exercise -->
     <Modal :show="showUserExerciseModal" @close="closeUserExerciseModal">
@@ -194,7 +198,7 @@ const loading = ref(true);
 const exercises = ref([]);
 const userExercises = ref([]);
 const selectedExercise = ref(null);
-const duration = ref(0);
+const duration = ref(1);
 
 // Pagination state
 const exercisePage = ref(1);
@@ -256,9 +260,12 @@ const loadMoreUserExercises = () => {
   fetchUserExercises(true);
 };
 
+const openSelectedModal = ref(false);
+
 // Select exercise
 const selectExercise = (ex, isUser = false) => {
   selectedExercise.value = { ...ex, isUser };
+  openSelectedModal.value = true;
 };
 
 // Modal user exercise

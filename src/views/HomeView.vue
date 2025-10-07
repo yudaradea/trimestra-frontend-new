@@ -143,8 +143,108 @@
 
         <!-- Categories -->
         <FavoriteCategory v-else :categories="categories" />
+
+        <!-- Rekomendasi Makanan -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-base font-semibold text-gray-800">
+              Rekomendasi Makanan
+            </h2>
+            <RouterLink to="/food" class="text-sm text-primary hover:underline"
+              >Lihat semua</RouterLink
+            >
+          </div>
+
+          <div v-if="recommendedLoading" class="flex justify-center py-4">
+            <div class="text-xl animate-spin">⏳</div>
+          </div>
+
+          <div v-else class="grid grid-cols-2 gap-4">
+            <div
+              v-for="food in recommendedFoods"
+              :key="food.id"
+              class="flex flex-col p-3 transition border shadow-sm rounded-xl hover-shadow-md"
+            >
+              <img
+                :src="food.image_url"
+                alt="food"
+                class="object-cover w-full h-24 rounded-md"
+              />
+
+              <div class="flex flex-col justify-between flex-1 mt-2">
+                <h3 class="text-sm font-semibold text-gray-800">
+                  {{ food.name }}
+                </h3>
+
+                <div class="flex items-center justify-between mt-1 text-xs">
+                  <p class="text-gray-500">{{ food.food_category_name }}</p>
+                  <p class="text-gray-600">🔥 {{ food.calories }} kal</p>
+                </div>
+              </div>
+
+              <button
+                @click="openFoodModal(food)"
+                class="w-full py-1 mt-4 text-sm text-white rounded bg-primary hover-bg-primary/80"
+              >
+                Tambahkan ke Diary
+              </button>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
+
+    <Modal :show="showFoodModal" @close="showFoodModal = false">
+      <div class="space-y-4">
+        <p class="text-lg font-semibold">Asupan {{ selectedFood?.name }}</p>
+        <!-- Pilih Tipe Makan -->
+        <div>
+          <label class="block mb-1 text-sm font-medium">Jenis Makan</label>
+
+          <CustomSelect v-model="mealType" :meal-options="mealOptions" />
+        </div>
+
+        <!-- Input Quantity -->
+        <div>
+          <label class="block mb-1 text-sm font-medium">Jumlah Asupan</label>
+          <input
+            type="number"
+            v-model.number="quantity"
+            min="1"
+            class="input"
+          />
+        </div>
+
+        <!-- Kalori -->
+        <p class="text-sm text-gray-600">
+          Total kalori:
+          <span class="font-semibold text-primary"
+            >{{ totalNutrition.calories }} kal</span
+          >
+        </p>
+        <p class="text-sm text-gray-600">
+          Protein:
+          <span class="font-semibold">{{ totalNutrition.protein }} g</span> |
+          Lemak: <span class="font-semibold">{{ totalNutrition.fat }} g</span> |
+          Karbo:
+          <span class="font-semibold"
+            >{{ totalNutrition.carbohydrates }} g</span
+          >
+        </p>
+
+        <!-- Tombol -->
+        <button
+          @click="addFoodToDiary"
+          class="w-full py-2 mt-2 text-white rounded bg-primary hover:bg-primary/80"
+          :disabled="quantity.length === 0"
+          :class="{
+            'opacity-50 cursor-not-allowed': quantity.length === 0,
+          }"
+        >
+          Tambahkan ke Diary
+        </button>
+      </div>
+    </Modal>
 
     <BottomNav />
   </div>
@@ -159,6 +259,8 @@ import BottomNav from '@/components/BottomNav.vue';
 import api from '@/lib/axios';
 import { useToast } from 'vue-toastification';
 import Header from '@/components/Header.vue';
+import Modal from '@/components/Modal.vue';
+import CustomSelect from '@/components/CustomSelect.vue';
 
 const auth = useAuthStore();
 const userName = computed(() => auth.getUserName);
@@ -168,20 +270,99 @@ const percentage = ref(0);
 const initialLoading = ref(true);
 const categoriesLoading = ref(false);
 
-onMounted(async () => {
+const recommendedFoods = ref([]);
+const recommendedLoading = ref(false);
+const showFoodModal = ref(false);
+const selectedFood = ref(null);
+const quantity = ref(1);
+const mealOptions = [
+  { label: 'Sarapan', value: 'breakfast' },
+  { label: 'Makan Siang', value: 'lunch' },
+  { label: 'Makan Malam', value: 'dinner' },
+  { label: 'Camilan', value: 'snack' },
+];
+
+const mealType = ref('lunch');
+
+const currentDate = ref(new Date());
+const formatDate = (date) => {
+  const d = date ? (date instanceof Date ? date : new Date(date)) : new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+const diaryDate = computed(() => formatDate(currentDate.value));
+
+const fetchRecommendedFoods = async () => {
+  recommendedLoading.value = true;
   try {
-    await Promise.all([fetchDailyProgress(), fetchCategories()]);
-  } catch (error) {
-    console.error('Failed to load initial data:', error);
+    const { data } = await api.get('/food-recomended');
+    recommendedFoods.value = data.data;
+  } catch (err) {
+    console.error('Failed to fetch recommended foods:', err);
+    toast.error('Gagal memuat rekomendasi makanan');
   } finally {
-    initialLoading.value = false;
+    recommendedLoading.value = false;
   }
+};
+
+const openFoodModal = (food) => {
+  selectedFood.value = food;
+  quantity.value = quantity.value || 1;
+  showFoodModal.value = true;
+};
+
+const addFoodToDiary = async () => {
+  try {
+    await api.post('/food-diary', {
+      date: diaryDate.value,
+      type: mealType.value,
+      items: [
+        {
+          food_id: selectedFood.value.id,
+          quantity: quantity.value,
+        },
+      ],
+    });
+    toast.success('Makanan berhasil ditambahkan ke diary!');
+    showFoodModal.value = false;
+  } catch (err) {
+    toast.error('Gagal menambahkan makanan');
+  }
+};
+
+const totalNutrition = computed(() => {
+  if (!selectedFood.value || !quantity.value) {
+    return {
+      calories: 0,
+      protein: 0,
+      fat: 0,
+      carbohydrates: 0,
+    };
+  }
+
+  return {
+    calories: Math.round(selectedFood.value.calories * quantity.value),
+    protein: parseFloat(
+      (selectedFood.value.protein * quantity.value).toFixed(2)
+    ),
+    fat: parseFloat((selectedFood.value.fat * quantity.value).toFixed(2)),
+    carbohydrates: parseFloat(
+      (selectedFood.value.carbohydrates * quantity.value).toFixed(2)
+    ),
+  };
 });
 
 const fetchDailyProgress = async () => {
   try {
     const { data } = await api.get('/diary');
     percentage.value = data.percentage.calories;
+    // jika data percentage minus, set ke 0
+    if (percentage.value < 0) percentage.value = 0;
+
+    // jika data percentage lebih dari 100, set ke 100
+    if (percentage.value > 100) percentage.value = 100;
   } catch (err) {
     console.error('Failed to fetch daily progress:', err);
     console.error(err);
@@ -202,6 +383,20 @@ const fetchCategories = async () => {
     categoriesLoading.value = false;
   }
 };
+
+onMounted(async () => {
+  try {
+    await Promise.all([
+      fetchDailyProgress(),
+      fetchCategories(),
+      fetchRecommendedFoods(),
+    ]);
+  } catch (error) {
+    console.error('Failed to load initial data:', error);
+  } finally {
+    initialLoading.value = false;
+  }
+});
 
 const connectDevice = () => toast.info('Fitur sync alat segera hadir!');
 </script>
