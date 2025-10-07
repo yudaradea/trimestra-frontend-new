@@ -2,7 +2,7 @@
   <div class="max-w-md min-h-screen mx-auto bg-white">
     <Header title="Pengaturan" showBack />
 
-    <div class="flex flex-col px-6 py-6 space-y-6">
+    <div class="flex flex-col px-6 py-6 pb-16 space-y-6">
       <!-- Notifikasi -->
       <button
         @click="goTo('/settings/notification')"
@@ -39,9 +39,8 @@
         <i class="text-xl text-gray-400 ri-arrow-right-s-line"></i>
       </button>
     </div>
-
-    <BottomNav />
   </div>
+  <BottomNav />
 </template>
 
 <script setup>

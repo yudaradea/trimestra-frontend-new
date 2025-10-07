@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-md min-h-screen pb-24 mx-auto bg-white">
+  <div class="max-w-md min-h-screen pb-16 mx-auto bg-white">
     <Header title="Daftar Makanan" showBack />
 
     <div
@@ -155,10 +155,9 @@
           </button>
         </div>
       </Modal>
-
-      <BottomNav />
     </div>
   </div>
+  <BottomNav />
 </template>
 
 <script setup>

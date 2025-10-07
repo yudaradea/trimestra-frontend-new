@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-md min-h-screen pb-20 mx-auto bg-white">
+  <div class="max-w-md min-h-screen pb-16 mx-auto bg-white">
     <Header title="Diary" showBack />
 
     <!-- Loading -->
@@ -254,8 +254,6 @@
         </div>
       </div>
     </div>
-
-    <BottomNav />
   </div>
 
   <Modal :show="openModal" @close="openModal = false">
@@ -288,6 +286,7 @@
       </div>
     </div>
   </Modal>
+  <BottomNav />
 </template>
 
 <script setup>
@@ -388,6 +387,8 @@ const fetchDiary = async () => {
 
     // jika data percentage lebih dari 100, set ke 100
     if (data.percentage.calories > 100) percentages.value = 100;
+
+    percentages.value = data.percentage.calories;
   } catch (err) {
     toast.error('Gagal memuat diary');
   } finally {

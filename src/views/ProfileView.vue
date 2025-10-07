@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-md min-h-screen pb-20 mx-auto bg-white">
+  <div class="max-w-md min-h-screen pb-16 mx-auto bg-white">
     <!-- Header -->
     <Header title="Profile" showBack />
 
@@ -77,7 +77,6 @@
     </div>
 
     <!-- Bottom Navigation -->
-    <BottomNav />
 
     <ConfirmModal
       :show="showLogoutModal"
@@ -86,6 +85,7 @@
       @confirm="confirmLogout"
     />
   </div>
+  <BottomNav />
 </template>
 
 <script setup>

@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-md min-h-screen pb-20 mx-auto bg-white">
+  <div class="max-w-md min-h-screen pb-16 mx-auto bg-white">
     <Header title="Latihan" showBack />
 
     <!-- Loading State -->
@@ -85,9 +85,8 @@
         </button>
       </div>
     </div>
-
-    <BottomNav />
   </div>
+  <BottomNav />
 </template>
 
 <script setup>

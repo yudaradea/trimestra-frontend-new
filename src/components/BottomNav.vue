@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="fixed bottom-0 left-0 right-0 z-40 max-w-md mx-auto bg-white border-t border-gray-200"
+    class="fixed bottom-0 left-0 right-0 z-40 max-w-md mx-auto bg-white border-t border-gray-200 pb-[env(safe-area-inset-bottom)]"
   >
     <div class="flex justify-around py-2">
       <router-link
