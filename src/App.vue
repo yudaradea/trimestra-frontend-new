@@ -1,7 +1,7 @@
 <!-- menambahkan router view -->
 
 <template>
-  <div class="bg-gray-50">
+  <div class="min-h-screen bg-gray-50">
     <router-view />
   </div>
 </template>
@@ -11,8 +11,6 @@ import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { useToast } from 'vue-toastification';
-
-import BottomNav from '@/components/BottomNav.vue';
 
 const router = useRouter();
 const toast = useToast();

@@ -11,3 +11,7 @@
 nav {
   padding-bottom: env(safe-area-inset-bottom);
 }
+html,
+body {
+  height: 100%;
+}
