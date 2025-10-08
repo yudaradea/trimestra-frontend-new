@@ -1,7 +1,7 @@
 <template>
-  <div class="flex justify-center min-h-screen p-4 overflow-y-auto bg-gray-50">
+  <div class="flex justify-center min-h-screen overflow-y-auto bg-gray-50">
     <div
-      class="flex flex-col items-center justify-center w-full max-w-md p-6 space-y-20 text-center bg-white rounded-lg shadow-md"
+      class="flex flex-col items-center justify-center w-full max-w-md p-6 space-y-20 text-center bg-white"
     >
       <!-- Illustration -->
       <div>

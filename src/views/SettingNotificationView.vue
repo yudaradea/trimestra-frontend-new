@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-md min-h-screen pb-16 mx-auto bg-white">
+  <div class="max-w-md min-h-screen mx-auto bg-white">
     <Header title="Pengaturan Notifikasi" showBack />
 
     <div class="px-6 py-6 space-y-6">

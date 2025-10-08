@@ -18,6 +18,7 @@ import FoodSelectView from '@/views/FoodSelectView.vue';
 import ExerciseSelectView from '@/views/ExerciseSelectView.vue';
 import ExerciseView from '@/views/ExerciseView.vue';
 import ExerciseDetailView from '@/views/ExerciseDetailView.vue';
+import LaporanView from '@/views/LaporanView.vue';
 
 import NotFound from '@/errorPages/NotFound.vue';
 import Unauthorize from '@/errorPages/Unauthorize.vue';
@@ -133,6 +134,13 @@ const routes = [
     path: '/exercise-select',
     name: 'exercise-select',
     component: ExerciseSelectView,
+    meta: { requiresAuth: true },
+  },
+
+  {
+    path: '/reports',
+    name: 'laporan',
+    component: LaporanView,
     meta: { requiresAuth: true },
   },
 

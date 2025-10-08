@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-md pb-20 mx-auto bg-white">
+  <div class="max-w-md mx-auto bg-white">
     <Header title="Edit Profil" showBack />
     <div
       class="flex flex-col justify-center w-full max-w-md min-h-screen px-6 py-2 bg-white rounded-lg"
@@ -19,7 +19,7 @@
       </div>
 
       <!-- Form -->
-      <form v-else @submit.prevent="handleUpdateProfile" class="space-y-6">
+      <form v-else @submit.prevent="handleUpdateProfile" class="mb-4 space-y-6">
         <!-- Foto Profil -->
         <div class="flex flex-col items-center">
           <label class="block mb-2 text-sm font-medium text-gray-700"

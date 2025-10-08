@@ -99,7 +99,7 @@
         </div>
 
         <!-- FOOTER -->
-        <div class="pt-6 text-sm text-center">
+        <div class="pt-6 pb-4 text-sm text-center">
           Belum punya akun?
           <router-link to="/register" class="font-semibold text-teal-600">
             Daftar

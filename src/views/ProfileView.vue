@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-md min-h-screen pb-16 mx-auto bg-white">
+  <div class="max-w-md min-h-screen mx-auto bg-white">
     <!-- Header -->
     <Header title="Profile" showBack />
 
@@ -38,19 +38,19 @@
 
       <!-- Cards -->
       <div
-        class="flex items-center justify-around w-full gap-2 px-4 py-4 bg-primary rounded-xl"
+        class="flex items-center justify-around w-full gap-2 px-4 py-2 bg-primary rounded-xl"
       >
         <div class="font-semibold text-center text-white">
           {{ profile?.profile.weight ? profile.profile.weight + ' Kg' : '' }}
         </div>
 
-        <div class="w-px h-12 bg-white"></div>
+        <div class="w-px h-10 bg-white"></div>
 
         <div class="font-semibold text-center text-white">
           {{ age ? age + ' Tahun' : '' }}
         </div>
 
-        <div class="w-px h-12 bg-white"></div>
+        <div class="w-px h-10 bg-white"></div>
 
         <div class="font-semibold text-center text-white">
           {{ profile?.profile.height ? profile.profile.height + ' CM' : '' }}
@@ -58,12 +58,12 @@
       </div>
 
       <!-- Menu List -->
-      <div class="w-full mt-8 space-y-2">
+      <div class="w-full mt-6 mb-4 space-y-2">
         <div
           v-for="(item, index) in menuItems"
           :key="index"
           @click="handleMenuClick(item)"
-          class="flex items-center justify-between px-4 py-3 rounded-lg shadow-sm cursor-pointer active:scale-[0.98] transition-transform"
+          class="flex items-center justify-between px-4 py-3 cursor-pointer active:scale-[0.98] transition-transform"
         >
           <div class="flex items-center space-x-3">
             <div class="bg-[#FFF8EE] p-2 rounded-lg">

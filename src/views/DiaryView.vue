@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-md min-h-screen pb-16 mx-auto bg-white">
+  <div class="max-w-md min-h-screen mx-auto bg-white">
     <Header title="Diary" showBack />
 
     <!-- Loading -->
@@ -84,9 +84,29 @@
       </div>
 
       <!-- Nutrisi -->
-      <div class="mt-6 space-y-3">
+      <div
+        class="grid grid-cols-3 gap-4 bg-[#EFF7EE] px-4 pt-6 pb-4 items-center rounded-xl"
+      >
         <div v-for="nutrient in nutrients" :key="nutrient.key">
-          <div class="flex justify-between text-sm">
+          <div
+            class="box-border w-full h-3 bg-white border rounded-sm"
+            :class="{
+              'border-primary': nutrient.key === 'carbohydrates',
+              'border-black': nutrient.key === 'protein',
+              'border-[#FF9385]': nutrient.key === 'fat',
+            }"
+          >
+            <div
+              class="w-full h-full"
+              :class="{
+                'bg-primary': nutrient.key === 'carbohydrates',
+                'bg-black': nutrient.key === 'protein',
+                'bg-[#FF9385]': nutrient.key === 'fat',
+              }"
+              :style="{ width: diary.percentage[nutrient.key] + '%' }"
+            ></div>
+          </div>
+          <div class="flex justify-between text-xs font-light mt-0.5">
             <span>{{ nutrient.label }}</span>
             <span>
               {{ diary.summary[nutrient.intake] }}/{{
@@ -94,12 +114,6 @@
               }}
               {{ nutrient.unit }}
             </span>
-          </div>
-          <div class="w-full h-2 bg-gray-200 rounded-full">
-            <div
-              class="h-2 rounded-full bg-primary"
-              :style="{ width: diary.percentage[nutrient.key] + '%' }"
-            ></div>
           </div>
         </div>
       </div>

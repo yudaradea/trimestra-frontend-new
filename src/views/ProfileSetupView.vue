@@ -1,8 +1,6 @@
 <template>
-  <div class="flex justify-center min-h-screen p-4 overflow-y-auto bg-gray-50">
-    <div
-      class="flex flex-col justify-center w-full max-w-md p-6 bg-white rounded-lg shadow-md"
-    >
+  <div class="flex justify-center min-h-screen overflow-y-auto bg-gray-50">
+    <div class="flex flex-col justify-center w-full max-w-md p-6 bg-white">
       <!-- Header -->
       <div class="mb-6 text-center">
         <h1 class="text-xl font-bold text-gray-900">Selamat Datang</h1>

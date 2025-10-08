@@ -1,4 +1,5 @@
 <template>
+  <div class="pt-16"></div>
   <nav
     class="fixed bottom-0 left-0 right-0 z-40 max-w-md mx-auto bg-white border-t border-gray-200 pb-[env(safe-area-inset-bottom)] w-full"
   >
@@ -24,7 +25,7 @@ import { Home, LineChart, Activity, User, History } from 'lucide-vue-next';
 const route = useRoute();
 const menuItems = [
   { label: 'Laporan', to: '/reports', icon: LineChart },
-  { label: 'History', to: '/diary', icon: History },
+  { label: 'Diary', to: '/diary', icon: History },
   { label: 'Home', to: '/', icon: Home },
   { label: 'Exercise', to: '/exercise', icon: Activity },
   { label: 'Profile', to: '/profile', icon: User },
