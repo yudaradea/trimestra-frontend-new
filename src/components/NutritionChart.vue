@@ -72,6 +72,7 @@ const chartOptions = {
   maintainAspectRatio: false,
   plugins: {
     legend: {
+      display: false,
       position: 'top',
       labels: {
         font: { size: 12 },

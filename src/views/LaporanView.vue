@@ -59,6 +59,24 @@
 
     <!-- Chart -->
     <div v-if="!loading && reportData.length > 0" class="px-4 mt-6">
+      <div class="grid grid-cols-4 gap-2 px-4 mt-4 text-sm text-center">
+        <div>
+          <p class="text-sm font-light text-gray-700">Kalori</p>
+          <div class="w-10 h-3 mx-auto mt-1 rounded bg-emerald-500"></div>
+        </div>
+        <div>
+          <p class="text-sm font-light text-gray-700">Protein</p>
+          <div class="w-10 h-3 mx-auto mt-1 bg-blue-500 rounded"></div>
+        </div>
+        <div>
+          <p class="text-sm font-light text-gray-700">Karbo</p>
+          <div class="w-10 h-3 mx-auto mt-1 rounded bg-amber-500"></div>
+        </div>
+        <div>
+          <p class="text-sm font-light text-gray-700">Lemak</p>
+          <div class="w-10 h-3 mx-auto mt-1 bg-red-500 rounded"></div>
+        </div>
+      </div>
       <NutritionChart :report="reportData" />
     </div>
 
