@@ -20,12 +20,29 @@ import ExerciseView from '@/views/ExerciseView.vue';
 import ExerciseDetailView from '@/views/ExerciseDetailView.vue';
 import LaporanView from '@/views/LaporanView.vue';
 import NotificationView from '@/views/NotificationView.vue';
+import DashboardView from '@/views/admin/DashboardView.vue';
+import UserView from '@/views/admin/UserView.vue';
 
 import NotFound from '@/errorPages/NotFound.vue';
 import Unauthorize from '@/errorPages/Unauthorize.vue';
 import Forbidden from '@/errorPages/Forbidden.vue';
 
 const routes = [
+  // admin
+  {
+    path: '/admin/dashboard',
+    name: 'admin-dashboard',
+    component: DashboardView,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+
+  {
+    path: '/admin/users',
+    name: 'admin-user',
+    component: UserView,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+
   {
     path: '/',
     name: 'home',
@@ -178,6 +195,17 @@ router.beforeEach(async (to, from, next) => {
       // Cek apakah user punya profile
       if (!authStore.user) {
         await authStore.fetchUser();
+      }
+
+      const isAdmin = authStore.user?.role === 'admin';
+
+      if (isAdmin) {
+        next('/admin/dashboard');
+      }
+
+      if (to.meta.requiresAdmin && !isAdmin) {
+        next('/403');
+        return;
       }
 
       if (!authStore.hasProfile) {

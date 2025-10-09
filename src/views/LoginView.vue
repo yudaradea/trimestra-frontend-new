@@ -142,6 +142,12 @@ async function handleLogin(event) {
     // cek user apakah punya profile
     await authStore.fetchUser();
 
+    // cek apakah dia admin
+    if (authStore.user.role === 'admin') {
+      router.push('/admin/dashboard');
+      return;
+    }
+
     if (!authStore.user.profile) {
       router.push('/profile-setup');
       return;
