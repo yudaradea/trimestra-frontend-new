@@ -24,9 +24,9 @@
     >
       <i :class="`text-xl ${notif.icon}`"></i>
       <div class="flex-1">
-        <h4 class="font-medium">{{ notif.title }}</h4>
-        <p v-if="notif.message" class="text-sm">{{ notif.message }}</p>
-        <div class="mt-1 text-xs">{{ formatTime(notif.time) }}</div>
+        <h4 class="text-sm font-medium">{{ notif.title }}</h4>
+        <p v-if="notif.message" class="text-xs mt-0.5">{{ notif.message }}</p>
+        <div class="mt-1 text-[11px]">{{ formatTime(notif.time) }}</div>
       </div>
     </div>
   </div>
