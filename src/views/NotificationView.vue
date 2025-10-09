@@ -24,7 +24,7 @@
         <h3 class="mb-2 text-sm font-semibold text-gray-500">
           {{ formatDate(group.date) }}
         </h3>
-        <div class="space-y-2">
+        <div class="space-y-3">
           <NotificationItem
             v-for="notif in group.items"
             :key="notif.id"

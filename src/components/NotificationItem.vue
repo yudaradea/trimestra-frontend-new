@@ -1,12 +1,9 @@
 <template>
-  <div
-    ref="itemRef"
-    class="relative overflow-hidden rounded shadow-sm animate-fade-in"
-  >
+  <div ref="itemRef" class="relative rounded animate-fade-in">
     <!-- Tombol Hapus -->
     <div
       v-if="showDelete"
-      class="absolute top-0 bottom-0 right-0 z-10 flex items-center justify-center w-20 text-sm font-semibold text-white bg-red-500"
+      class="absolute top-0 bottom-0 right-0 z-10 flex items-center justify-center text-sm font-semibold text-white bg-red-500 cursor-pointer w-14"
       @click.stop="handleDelete"
     >
       Hapus
@@ -14,22 +11,22 @@
 
     <!-- Konten Notifikasi -->
     <div
-      class="flex items-start gap-3 p-3 transition-transform duration-300"
-      :style="{ transform: showDelete ? 'translateX(-80px)' : 'translateX(0)' }"
+      class="flex items-start gap-3 p-3 transition-transform duration-300 rounded-lg"
+      :style="{ transform: showDelete ? 'translateX(-56px)' : 'translateX(0)' }"
       @click="handleRead"
       v-touch:swipe.left="onSwipeLeft"
       v-touch:swipe.right="onSwipeRight"
-      :class="
+      :class="[
         isRead
           ? 'bg-gray-100 text-gray-500 font-light'
-          : 'bg-primary text-white shadow-2xl cursor-pointer'
-      "
+          : 'bg-primary text-white shadow-lg hover:shadow-2xl cursor-pointer',
+      ]"
     >
       <i :class="`text-xl ${notif.icon}`"></i>
       <div class="flex-1">
         <h4 class="font-medium">{{ notif.title }}</h4>
         <p v-if="notif.message" class="text-sm">{{ notif.message }}</p>
-        <div class="mt-1 text-xs">{{ notif.time }}</div>
+        <div class="mt-1 text-xs">{{ formatTime(notif.time) }}</div>
       </div>
     </div>
   </div>
@@ -62,6 +59,12 @@ function onSwipeLeft() {
 function onSwipeRight() {
   clearTimeout(swipeTimeout);
   swipeTimeout = setTimeout(() => (showDelete.value = false), 50);
+}
+
+function formatTime(time) {
+  if (!time) return '';
+  // potong format "HH:MM:SS" menjadi "HH:MM"
+  return time.slice(0, 5);
 }
 
 // 🟧 Klik di luar → sembunyikan tombol hapus
