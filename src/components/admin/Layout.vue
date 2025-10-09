@@ -9,6 +9,7 @@
       :title="title"
       :name="adminName"
       :foto="foto"
+      @logout="handleLogout"
       @toggle="sidebarOpen = !sidebarOpen"
     />
 
