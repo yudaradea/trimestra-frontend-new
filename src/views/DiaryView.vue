@@ -103,7 +103,9 @@
                 'bg-black': nutrient.key === 'protein',
                 'bg-[#FF9385]': nutrient.key === 'fat',
               }"
-              :style="{ width: diary.percentage[nutrient.key] + '%' }"
+              :style="{
+                width: Math.min(diary.percentage[nutrient.key], 100) + '%',
+              }"
             ></div>
           </div>
           <div
