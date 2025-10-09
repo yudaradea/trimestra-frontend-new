@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-md min-h-screen mx-auto bg-white">
+  <div class="max-w-md min-h-screen mx-auto mt-[10px] bg-white">
     <Header />
 
     <!-- Loading State -->

@@ -7,27 +7,37 @@
         </button>
         <h1 class="text-lg font-semibold text-gray-700">{{ title }}</h1>
       </div>
-      <!-- Tombol Notifikasi -->
-      <router-link to="/notifications">
+
+      <!-- Tombol Notifikasi dengan Badge -->
+      <router-link to="/notifications" class="relative">
         <i class="text-2xl text-teal-600 ri-notification-3-line"></i>
+        <span
+          v-if="notifStore.unreadCount > 0"
+          class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-semibold rounded-full px-1.5 py-0.5"
+        >
+          {{ notifStore.unreadCount }}
+        </span>
       </router-link>
     </div>
   </div>
 </template>
 
 <script setup>
+import { useNotificationStore } from '@/stores/notificationStore';
+import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+
 const props = defineProps({
   title: String,
   showBack: { type: Boolean, default: false },
 });
+
 const router = useRouter();
 const goBack = () => router.back();
-</script>
 
-<style scoped>
-/* biar tetap tinggi tapi tidak terlalu besar */
-header {
-  height: 56px;
-}
-</style>
+const notifStore = useNotificationStore();
+
+onMounted(() => {
+  notifStore.fetchUnreadCount();
+});
+</script>

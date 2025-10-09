@@ -19,6 +19,7 @@ import ExerciseSelectView from '@/views/ExerciseSelectView.vue';
 import ExerciseView from '@/views/ExerciseView.vue';
 import ExerciseDetailView from '@/views/ExerciseDetailView.vue';
 import LaporanView from '@/views/LaporanView.vue';
+import NotificationView from '@/views/NotificationView.vue';
 
 import NotFound from '@/errorPages/NotFound.vue';
 import Unauthorize from '@/errorPages/Unauthorize.vue';
@@ -144,6 +145,12 @@ const routes = [
     meta: { requiresAuth: true },
   },
 
+  {
+    path: '/notifications',
+    name: 'notifications',
+    component: NotificationView,
+    meta: { requiresAuth: true },
+  },
   // error pages
   { path: '/401', name: 'Unauthorized', component: Unauthorize },
   { path: '/403', name: 'Forbidden', component: Forbidden },

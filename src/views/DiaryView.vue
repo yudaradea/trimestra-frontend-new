@@ -106,7 +106,9 @@
               :style="{ width: diary.percentage[nutrient.key] + '%' }"
             ></div>
           </div>
-          <div class="flex justify-between text-xs font-light mt-0.5">
+          <div
+            class="flex justify-between text-[10px] sm:text-xs font-light mt-0.5"
+          >
             <span>{{ nutrient.label }}</span>
             <span>
               {{ diary.summary[nutrient.intake] }}/{{
