@@ -206,7 +206,9 @@
 
         <!-- Input Quantity -->
         <div>
-          <label class="block mb-1 text-sm font-medium">Jumlah Asupan</label>
+          <label class="block mb-1 text-sm font-medium"
+            >Jumlah Asupan (porsi)</label
+          >
           <input
             type="number"
             v-model.number="quantity"

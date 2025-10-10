@@ -116,7 +116,7 @@
 
           <div>
             <label class="block mb-1 text-sm font-medium"
-              >Jumlah Asupan (gram)</label
+              >Jumlah Asupan (porsi)</label
             >
             <input
               type="number"
