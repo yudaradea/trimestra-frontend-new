@@ -93,7 +93,7 @@ const routes = [
   },
   {
     path: '/settings/notification',
-    name: 'notifications',
+    name: 'notifications-setting', // Diubah agar tidak konflik dengan '/notifications'
     component: SettingNotificationView,
     meta: { requiresAuth: true },
   },
@@ -184,60 +184,64 @@ router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
   const isAuthenticated = authStore.isAuthenticated;
 
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    return next({
-      path: '/login',
-      query: { redirect: to.fullPath }, // Simpan tujuan awal
-    });
-  } else if (to.meta.requiresNoAuth && isAuthenticated) {
-    // Jika user sudah login dan mengakses login/register, redirect ke home atau profile setup
-    if (to.name === 'login' || to.name === 'register') {
-      // Cek apakah user punya profile
-      if (!authStore.user) {
-        await authStore.fetchUser();
-      }
-
-      const isAdmin = authStore.user?.role === 'admin';
-
-      if (isAdmin) {
-        next('/admin/dashboard');
-      }
-
-      if (to.meta.requiresAdmin && !isAdmin) {
-        next('/403');
-        return;
-      }
-
-      if (!authStore.hasProfile) {
-        next('/profile-setup');
-      } else {
-        next('/');
-      }
-    } else {
-      next();
-    }
-  } else if (to.meta.requiresAuth && isAuthenticated) {
-    // Jika user mengakses halaman yang membutuhkan auth, cek apakah punya profile
-    if (!authStore.user) {
-      await authStore.fetchUser();
-    }
-    if (to.name === 'profile-setup') {
-      if (authStore.hasProfile) {
-        next('/');
-      } else {
-        next();
-      }
-    } else {
-      // Jika user mengakses halaman lain
-      if (!authStore.hasProfile) {
-        // Jika belum punya profile, redirect ke profile setup
-        next('/profile-setup');
-      } else {
-        next();
-      }
-    }
-  } else {
-    next();
+  // Pastikan data user sudah ada jika sudah terotentikasi, untuk cek role dan hasProfile
+  if (isAuthenticated && !authStore.user) {
+    await authStore.fetchUser();
   }
+  const isAdmin = authStore.user?.role === 'admin';
+  const hasProfile = authStore.hasProfile; // Gunakan getter dari store
+
+  // --- Logic 1: Halaman yang membutuhkan Otentikasi (requiresAuth) ---
+  if (to.meta.requiresAuth) {
+    if (!isAuthenticated) {
+      // Belum login, redirect ke login
+      return next({
+        name: 'login',
+        query: { redirect: to.fullPath }, // Simpan tujuan awal
+      });
+    }
+
+    // Sudah login, cek otorisasi dan kelengkapan profil
+
+    // Cek Akses Admin
+    if (to.meta.requiresAdmin && !isAdmin) {
+      // Membutuhkan admin tapi user bukan admin -> Forbidden
+      return next('/403');
+    }
+
+    // Cek Profile Setup
+    if (!hasProfile && !isAdmin && to.name !== 'profile-setup') {
+      // Belum punya profil dan mencoba akses halaman lain (selain profile-setup)
+      return next({ name: 'profile-setup' });
+    }
+
+    if (hasProfile && to.name === 'profile-setup') {
+      // Sudah punya profil tapi mencoba akses profile-setup -> Redirect ke home
+      return next({ name: 'home' });
+    }
+
+    // Lanjut ke halaman yang dituju
+    return next();
+  }
+
+  // --- Logic 2: Halaman yang TIDAK membutuhkan Otentikasi (requiresNoAuth) ---
+  if (to.meta.requiresNoAuth && isAuthenticated) {
+    // Sudah login tapi mencoba akses login/register/register-success
+    if (isAdmin) {
+      // Jika Admin, redirect ke dashboard admin
+      return next({ name: 'admin-dashboard' });
+    } else if (!hasProfile) {
+      // Jika Belum ada profil, redirect ke profile setup
+      return next({ name: 'profile-setup' });
+    } else {
+      // Sudah lengkap, redirect ke home
+      return next({ name: 'home' });
+    }
+  }
+
+  // --- Logic 3: Halaman lainnya (Error pages, atau tidak punya meta) ---
+  // Jika tidak ada meta requiresAuth atau requiresNoAuth, atau jika requiresNoAuth dan tidak login
+  next();
 });
+
 export default router;
