@@ -20,9 +20,14 @@ import ExerciseView from '@/views/ExerciseView.vue';
 import ExerciseDetailView from '@/views/ExerciseDetailView.vue';
 import LaporanView from '@/views/LaporanView.vue';
 import NotificationView from '@/views/NotificationView.vue';
+
+// admin
 import DashboardView from '@/views/admin/DashboardView.vue';
 import UserView from '@/views/admin/UserView.vue';
+import CreateUserView from '@/views/admin/CreateUserView.vue';
+import EditUserView from '@/views/admin/EditUserView.vue';
 
+// error pages
 import NotFound from '@/errorPages/NotFound.vue';
 import Unauthorize from '@/errorPages/Unauthorize.vue';
 import Forbidden from '@/errorPages/Forbidden.vue';
@@ -40,6 +45,20 @@ const routes = [
     path: '/admin/users',
     name: 'admin-user',
     component: UserView,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+
+  {
+    path: '/admin/users/create',
+    name: 'admin-user-create',
+    component: CreateUserView,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+
+  {
+    path: '/admin/users/edit/:id',
+    name: 'admin-user-edit',
+    component: EditUserView,
     meta: { requiresAuth: true, requiresAdmin: true },
   },
 

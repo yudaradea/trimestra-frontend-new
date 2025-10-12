@@ -1,6 +1,17 @@
 <template>
   <Layout title="Manajemen Pengguna">
     <div class="p-4 bg-white rounded-lg shadow-sm">
+      <!-- tombol tambah user -->
+
+      <div class="flex justify-end mb-6">
+        <button
+          @click="createUser"
+          class="px-4 py-2 text-white bg-teal-500 rounded-lg hover:bg-teal-600"
+        >
+          Tambah Pengguna
+        </button>
+      </div>
+
       <!-- Top Bar -->
       <div
         class="flex flex-col gap-3 mb-4 sm:flex-row sm:items-center sm:justify-between"
@@ -49,7 +60,6 @@
         class="flex flex-col items-center justify-center py-12"
       >
         <div class="text-4xl animate-spin">⏳</div>
-        <span class="mt-4 text-sm text-gray-600">Memuat data...</span>
       </div>
 
       <!-- Table -->
@@ -59,6 +69,8 @@
         :sortBy="sortBy"
         :sortDirection="sortDirection"
         @sort="toggleSort"
+        @edit="editUser"
+        @delete="confirmDelete"
       />
 
       <!-- Pagination -->
@@ -192,6 +204,39 @@
         </button>
       </div>
     </Modal>
+
+    <Modal
+      :show="showDeleteModal"
+      @close="showDeleteModal = false"
+      title="Konfirmasi Hapus"
+    >
+      <div class="space-y-4">
+        <p>
+          Anda akan menghapus user <strong>{{ selectedUser?.name }}</strong
+          >. Masukkan password admin untuk konfirmasi.
+        </p>
+        <input
+          v-model="adminPassword"
+          type="password"
+          placeholder="Password Admin"
+          class="input"
+        />
+        <div class="flex justify-end gap-3">
+          <button
+            @click="showDeleteModal = false"
+            class="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200"
+          >
+            Batal
+          </button>
+          <button
+            @click="deleteUser"
+            class="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600"
+          >
+            Hapus
+          </button>
+        </div>
+      </div>
+    </Modal>
   </Layout>
 </template>
 
@@ -202,6 +247,19 @@ import Layout from '@/components/admin/Layout.vue';
 import UserTableInuser from '@/components/admin/UserTableInuser.vue';
 import Modal from '@/components/Modal.vue';
 import { useLocation } from '@/composables/useLocation';
+import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+
+const toast = useToast();
+
+const router = useRouter();
+
+const createUser = () => {
+  router.push({ name: 'admin-user-create' });
+};
+
+const editUser = (user) =>
+  router.push({ name: 'admin-user-edit', params: { id: user.id } });
 
 const loading = ref(true);
 const users = ref([]);
@@ -212,7 +270,7 @@ const currentPage = ref(1);
 const showFilter = ref(false);
 
 // sorting state
-const sortBy = ref('location');
+const sortBy = ref('');
 const sortDirection = ref('asc');
 
 // pakai composable lokasi
@@ -232,6 +290,35 @@ const province = ref('');
 const regency = ref('');
 const district = ref('');
 const village = ref('');
+
+// modal delete
+const showDeleteModal = ref(false);
+const selectedUser = ref(null);
+const adminPassword = ref('');
+
+function confirmDelete(user) {
+  selectedUser.value = user;
+  adminPassword.value = '';
+  showDeleteModal.value = true;
+}
+
+async function deleteUser() {
+  if (!adminPassword.value) {
+    toast.error('Password admin harus diisi');
+    return;
+  }
+  try {
+    await axios.delete(`/user/${selectedUser.value.id}`, {
+      data: { password: adminPassword.value },
+    });
+    showDeleteModal.value = false;
+    toast.success('User berhasil dihapus');
+    fetchUsers();
+  } catch (err) {
+    console.error(err);
+    toast.error(err.response.data.message);
+  }
+}
 
 async function fetchUsers() {
   loading.value = true;

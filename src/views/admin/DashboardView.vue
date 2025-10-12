@@ -1,9 +1,7 @@
 <template>
   <Layout title="Dashboard">
     <div v-if="loading" class="flex items-center justify-center min-h-[70vh]">
-      <div
-        class="w-10 h-10 border-4 border-blue-200 rounded-full animate-spin border-t-blue-600"
-      ></div>
+      <div class="text-4xl animate-spin">⏳</div>
     </div>
     <div v-else>
       <div class="grid grid-cols-1 gap-6 mb-6 sm:grid-cols-2 lg:grid-cols-3">

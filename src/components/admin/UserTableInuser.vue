@@ -6,20 +6,6 @@
           <th class="px-4 py-2">Foto</th>
           <th class="px-4 py-2">Nama</th>
           <th class="px-4 py-2">Email</th>
-
-          <!-- Role sortable -->
-          <th
-            class="px-4 py-2 cursor-pointer select-none"
-            @click="$emit('sort', 'role')"
-          >
-            Role
-            <span v-if="sortBy === 'role'">
-              <span v-if="sortDirection === 'asc'">▲</span>
-              <span v-else>▼</span>
-            </span>
-          </th>
-
-          <!-- Lokasi sortable -->
           <th
             class="px-4 py-2 cursor-pointer select-none"
             @click="$emit('sort', 'location')"
@@ -30,9 +16,9 @@
               <span v-else>▼</span>
             </span>
           </th>
-
           <th class="px-4 py-2">BMI</th>
           <th class="px-4 py-2">Tanggal Daftar</th>
+          <th class="px-4 py-2">Aksi</th>
         </tr>
       </thead>
       <tbody>
@@ -51,7 +37,6 @@
           </td>
           <td class="px-4 py-2 font-medium">{{ user.name }}</td>
           <td class="px-4 py-2">{{ user.email }}</td>
-          <td class="px-4 py-2 capitalize">{{ user.role }}</td>
           <td class="px-4 py-2">{{ user.profile?.location?.province_name }}</td>
           <td class="px-4 py-2">
             {{ user.profile?.calculated_bmi?.bmi }}
@@ -59,6 +44,20 @@
           </td>
           <td class="px-4 py-2">
             {{ new Date(user.created_at).toLocaleDateString('id-ID') }}
+          </td>
+          <td class="flex gap-2 px-4 py-2">
+            <button
+              @click="$emit('edit', user)"
+              class="px-2 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
+            >
+              Edit
+            </button>
+            <button
+              @click="$emit('delete', user)"
+              class="px-2 py-1 text-sm text-white bg-red-500 rounded hover:bg-red-600"
+            >
+              Delete
+            </button>
           </td>
         </tr>
 
@@ -79,5 +78,5 @@ defineProps({
   sortBy: String,
   sortDirection: String,
 });
-defineEmits(['sort']);
+defineEmits(['sort', 'edit', 'delete']);
 </script>
