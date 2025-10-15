@@ -27,6 +27,14 @@ import UserView from '@/views/admin/UserView.vue';
 import CreateUserView from '@/views/admin/CreateUserView.vue';
 import EditUserView from '@/views/admin/EditUserView.vue';
 
+import CreateFoodCategoryView from '@/views/admin/CreateFoodCategoryView.vue';
+import FoodCategoryView from '@/views/admin/FoodCategoryView.vue';
+import AdminFoodView from '@/views/admin/FoodView.vue';
+import CreateFoodView from '@/views/admin/CreateFoodView.vue';
+import EditFoodView from '@/views/admin/EditFoodView.vue';
+
+import AllergyView from '@/views/admin/AllergyView.vue';
+
 // error pages
 import NotFound from '@/errorPages/NotFound.vue';
 import Unauthorize from '@/errorPages/Unauthorize.vue';
@@ -59,6 +67,48 @@ const routes = [
     path: '/admin/users/edit/:id',
     name: 'admin-user-edit',
     component: EditUserView,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+
+  {
+    path: '/admin/food-category/create',
+    name: 'admin-food-category-create',
+    component: CreateFoodCategoryView,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+
+  {
+    path: '/admin/food-category',
+    name: 'admin-food-category',
+    component: FoodCategoryView,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+
+  {
+    path: '/admin/food',
+    name: 'admin-food',
+    component: AdminFoodView,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+
+  {
+    path: '/admin/food/create',
+    name: 'admin-food-create',
+    component: CreateFoodView,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+
+  {
+    path: '/admin/food/edit/:id',
+    name: 'admin-food-edit',
+    component: EditFoodView,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+
+  {
+    path: '/admin/allergy',
+    name: 'admin-allergy',
+    component: AllergyView,
     meta: { requiresAuth: true, requiresAdmin: true },
   },
 

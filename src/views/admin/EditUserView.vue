@@ -391,9 +391,6 @@ async function loadUser() {
   try {
     const res = await axios.get(`/user/${route.params.id}`);
     const user = res.data.data;
-
-    console.log('User data:', user);
-
     form.value.name = user.name;
     form.value.email = user.email;
     form.value.role = user.role || '';
@@ -435,9 +432,6 @@ async function loadUser() {
 
     // Set alergi - PENTING: Map dari NAME ke ID
     if (profile.food_allergies && profile.food_allergies.length > 0) {
-      console.log('Food allergies from API:', profile.food_allergies);
-      console.log('Available allergies:', allergies.value);
-
       // Clear selected allergies first
       selectedAllergies.value = [];
 
@@ -448,8 +442,6 @@ async function loadUser() {
           selectedAllergies.value.push(allergy.id);
         }
       });
-
-      console.log('Selected allergy IDs:', selectedAllergies.value);
     }
   } catch (err) {
     console.error('Load user error:', err);
@@ -496,18 +488,6 @@ async function handleUpdateUser() {
       allergyNames.forEach((name) => {
         formData.append('food_allergies[]', name);
       });
-    }
-
-    console.log('Submitting allergies:', allergyNames);
-
-    // Log FormData for debugging
-    console.log('=== FormData Contents ===');
-    for (let pair of formData.entries()) {
-      if (pair[1] instanceof File) {
-        console.log(pair[0], ':', 'File -', pair[1].name);
-      } else {
-        console.log(pair[0], ':', pair[1]);
-      }
     }
 
     // Send request

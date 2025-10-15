@@ -6,6 +6,10 @@
     <div
       class="relative w-full max-w-md p-6 mx-4 bg-white shadow-lg rounded-xl animate-slide-up"
     >
+      <!-- tambahkan title -->
+      <h3 class="mb-4 text-lg font-semibold text-center text-gray-800">
+        <slot name="title"></slot>
+      </h3>
       <!-- Tombol close -->
       <button
         @click="$emit('close')"

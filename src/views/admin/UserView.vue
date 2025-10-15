@@ -1,20 +1,9 @@
 <template>
-  <Layout title="Manajemen Pengguna">
+  <Layout title="Manajemen Users">
     <div class="p-4 bg-white rounded-lg shadow-sm">
-      <!-- tombol tambah user -->
-
-      <div class="flex justify-end mb-6">
-        <button
-          @click="createUser"
-          class="px-4 py-2 text-white bg-teal-500 rounded-lg hover:bg-teal-600"
-        >
-          Tambah Pengguna
-        </button>
-      </div>
-
       <!-- Top Bar -->
       <div
-        class="flex flex-col gap-3 mb-4 sm:flex-row sm:items-center sm:justify-between"
+        class="flex flex-col gap-3 mb-6 sm:flex-row sm:items-center sm:justify-between"
       >
         <!-- Search -->
         <input
@@ -253,10 +242,6 @@ import { useToast } from 'vue-toastification';
 const toast = useToast();
 
 const router = useRouter();
-
-const createUser = () => {
-  router.push({ name: 'admin-user-create' });
-};
 
 const editUser = (user) =>
   router.push({ name: 'admin-user-edit', params: { id: user.id } });

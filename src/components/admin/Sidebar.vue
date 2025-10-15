@@ -33,7 +33,35 @@
         icon="ri-dashboard-line"
         label="Dashboard"
       />
-      <NavItem to="/admin/users" icon="ri-user-line" label="Pengguna" />
+      <NavItemGroup
+        icon="ri-user-line"
+        label="Users"
+        :children="[
+          { to: '/admin/users/create', label: 'Add User' },
+          { to: '/admin/users', label: 'List User' },
+        ]"
+      />
+
+      <NavItemGroup
+        icon="ri-restaurant-2-line"
+        label="Foods"
+        :children="[
+          { to: '/admin/food-category/create', label: 'Add Food Category' },
+          { to: '/admin/food-category', label: 'List Food Category' },
+          { to: '/admin/food/create', label: 'Add Food' },
+          { to: '/admin/food', label: 'List Food' },
+        ]"
+      />
+
+      <NavItemGroup
+        icon="ri-restaurant-2-line"
+        label="Allergies"
+        :children="[
+          // { to: '/admin/food-category/create', label: 'Add Food Category' },
+          { to: '/admin/allergy', label: 'List Allergy' },
+        ]"
+      />
+
       <NavItem
         to="/admin/notifications"
         icon="ri-notification-3-line"
@@ -52,6 +80,7 @@
 
 <script setup>
 import NavItem from './NavItem.vue';
+import NavItemGroup from './NavItemGroup.vue';
 defineProps({ isOpen: Boolean });
 defineEmits(['close', 'logout']);
 </script>
