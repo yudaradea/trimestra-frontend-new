@@ -54,7 +54,7 @@
       />
 
       <NavItemGroup
-        icon="ri-restaurant-2-line"
+        icon="ri-square-root"
         label="Exercises"
         :children="[
           // { to: '/admin/food-category/create', label: 'Add Food Category' },
@@ -63,13 +63,23 @@
       />
 
       <NavItemGroup
-        icon="ri-restaurant-2-line"
+        icon="ri-bar-chart-line"
+        label="Nutrition Target"
+        :children="[
+          // { to: '/admin/food-category/create', label: 'Add Food Category' },
+          { to: '/admin/nutrition-requirement', label: 'List Nutrition Target' },
+        ]"
+      />
+      
+      <NavItemGroup
+        icon="ri-command-fill"
         label="Allergies"
         :children="[
           // { to: '/admin/food-category/create', label: 'Add Food Category' },
           { to: '/admin/allergy', label: 'List Allergies' },
         ]"
       />
+
     </nav>
   </aside>
 </template>

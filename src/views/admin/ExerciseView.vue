@@ -2,7 +2,7 @@
   <Layout title="Manajemen Latihan">
     <div class="p-6 bg-white rounded shadow">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-semibold">Daftar Latihan</h2>
+        <h2 class="text-xl font-semibold">List Exercises</h2>
         <button
           @click="openCreateModal"
           class="px-4 py-2 text-white bg-teal-500 rounded hover:bg-teal-600"
@@ -12,7 +12,7 @@
       </div>
 
       <!-- Filter -->
-      <div class="flex items-center gap-4 mb-4">
+      <div class="flex items-center gap-4 mb-4 w-52">
         <select v-model="filterJenis" @change="fetchExercises(1)" class="input">
           <option value="">Semua Jenis</option>
           <option v-for="j in jenisList" :key="j" :value="j">{{ j }}</option>
@@ -87,12 +87,12 @@
             class="w-full input"
             placeholder="Nama latihan"
           />
-          <input
-            v-model="form.jenis"
-            type="text"
-            class="w-full input"
-            placeholder="Jenis latihan"
-          />
+            <select name="" id="" v-model="form.jenis" class="w-full input">
+              <option value="" v-if="!editing">Pilih Jenis</option>
+              <option value="Cardio">Cardio</option>
+              <option value="Strength">Strength</option>
+              <option value="Flexibility">Flexibility</option>
+            </select>
           <input
             v-model="form.calories_burned_per_minute"
             type="number"
@@ -104,7 +104,7 @@
             v-model="form.video_url"
             type="url"
             class="w-full input"
-            placeholder="URL Video"
+            placeholder="URL Video, ex: https://www.youtube.com/watch?v=..."
           />
           <textarea
             v-model="form.description"
@@ -116,13 +116,13 @@
         <div class="flex items-center justify-end gap-2">
           <button
             @click="closeFormModal"
-            class="px-2 py-3 text-white bg-gray-400 rounded"
+            class="px-4 py-2 text-white bg-gray-400 rounded"
           >
             Batal
           </button>
           <button
             @click="submitForm"
-            class="px-2 py-3 text-white rounded bg-primary"
+            class="px-4 py-2 text-white rounded bg-primary"
           >
             {{ editing ? 'Simpan Perubahan' : 'Tambah' }}
           </button>
@@ -139,8 +139,10 @@
         >?
       </p>
 
-      <button @click="closeDeleteModal" class="btn-secondary">Batal</button>
-      <button @click="deleteExercise" class="btn-danger">Hapus</button>
+     <div class="flex items-center justify-end gap-2 mt-4">
+       <button @click="closeDeleteModal" class="px-4 py-2 text-white bg-gray-400 rounded">Batal</button>
+      <button @click="deleteExercise" class="px-4 py-2 text-white bg-red-500 rounded">Hapus</button>
+     </div>
     </Modal>
   </Layout>
 </template>
@@ -160,7 +162,7 @@ const rowPerPage = ref(10);
 const loading = ref(false);
 
 const filterJenis = ref('');
-const jenisList = ref(['Cardio', 'Lari', 'Sepeda', 'Jalan Kaki']); // bisa diisi dinamis kalau ada endpoint jenis
+const jenisList = ref(['Cardio', 'Strength', 'Flexibility']); // bisa diisi dinamis kalau ada endpoint jenis
 
 const showFormModal = ref(false);
 const showDeleteModal = ref(false);

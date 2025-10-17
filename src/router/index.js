@@ -37,6 +37,8 @@ import AllergyView from '@/views/admin/AllergyView.vue';
 
 import AdminExercies from '@/views/admin/ExerciseView.vue';
 
+import NutritionReqView from '@/views/admin/NutritionReqView.vue';
+
 // error pages
 import NotFound from '@/errorPages/NotFound.vue';
 import Unauthorize from '@/errorPages/Unauthorize.vue';
@@ -111,6 +113,13 @@ const routes = [
     path: '/admin/exercise',
     name: 'admin-exercise',
     component: AdminExercies,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+
+  {
+    path: '/admin/nutrition-requirement',
+    name: 'admin-nutrition-requirement',
+    component: NutritionReqView,
     meta: { requiresAuth: true, requiresAdmin: true },
   },
 
