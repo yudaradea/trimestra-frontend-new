@@ -16,7 +16,7 @@
       <table v-else class="w-full text-sm border">
         <thead class="text-left bg-gray-100">
           <tr>
-            <th class="p-2 border-b">#</th>
+            <th class="p-2 border-b">No</th>
             <th class="p-2 border-b">Nama Alergi</th>
             <th class="w-32 p-2 border-b">Aksi</th>
           </tr>

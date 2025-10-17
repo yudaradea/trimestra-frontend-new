@@ -55,24 +55,20 @@
 
       <NavItemGroup
         icon="ri-restaurant-2-line"
-        label="Allergies"
+        label="Exercises"
         :children="[
           // { to: '/admin/food-category/create', label: 'Add Food Category' },
-          { to: '/admin/allergy', label: 'List Allergy' },
+          { to: '/admin/exercise', label: 'List Exercises' },
         ]"
       />
 
-      <NavItem
-        to="/admin/notifications"
-        icon="ri-notification-3-line"
-        label="Notifikasi"
-      />
-      <NavItem to="/admin/reports" icon="ri-file-chart-line" label="Laporan" />
-      <NavItem to="/admin/content" icon="ri-book-open-line" label="Edukasi" />
-      <NavItem
-        to="/admin/settings"
-        icon="ri-settings-3-line"
-        label="Pengaturan"
+      <NavItemGroup
+        icon="ri-restaurant-2-line"
+        label="Allergies"
+        :children="[
+          // { to: '/admin/food-category/create', label: 'Add Food Category' },
+          { to: '/admin/allergy', label: 'List Allergies' },
+        ]"
       />
     </nav>
   </aside>

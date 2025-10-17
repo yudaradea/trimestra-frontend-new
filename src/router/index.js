@@ -35,6 +35,8 @@ import EditFoodView from '@/views/admin/EditFoodView.vue';
 
 import AllergyView from '@/views/admin/AllergyView.vue';
 
+import AdminExercies from '@/views/admin/ExerciseView.vue';
+
 // error pages
 import NotFound from '@/errorPages/NotFound.vue';
 import Unauthorize from '@/errorPages/Unauthorize.vue';
@@ -102,6 +104,13 @@ const routes = [
     path: '/admin/food/edit/:id',
     name: 'admin-food-edit',
     component: EditFoodView,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+
+  {
+    path: '/admin/exercise',
+    name: 'admin-exercise',
+    component: AdminExercies,
     meta: { requiresAuth: true, requiresAdmin: true },
   },
 
