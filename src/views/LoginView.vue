@@ -72,32 +72,6 @@
           </button>
         </form>
 
-        <!-- DIVIDER -->
-        <div class="flex items-center my-6">
-          <div class="flex-grow h-px bg-gray-300"></div>
-          <span class="px-3 text-sm text-gray-500">Atau masuk menggunakan</span>
-          <div class="flex-grow h-px bg-gray-300"></div>
-        </div>
-
-        <!-- SOCIAL LOGIN -->
-        <div class="space-y-3">
-          <button
-            @click="loginWithGoogle"
-            class="flex items-center justify-center w-full gap-2 py-3 border border-red-400 rounded-lg"
-          >
-            <img src="@/assets/google.webp" class="w-5 h-5" alt="Google" />
-            <span class="text-sm font-medium text-red-500">Google</span>
-          </button>
-
-          <button
-            @click="loginWithFacebook"
-            class="flex items-center justify-center w-full gap-2 py-3 border border-blue-500 rounded-lg"
-          >
-            <img src="@/assets/facebook.png" class="w-5 h-5" alt="Facebook" />
-            <span class="text-sm font-medium text-blue-600">Facebook</span>
-          </button>
-        </div>
-
         <!-- FOOTER -->
         <div class="pt-6 pb-4 text-sm text-center">
           Belum punya akun?
@@ -164,13 +138,5 @@ async function handleLogin(event) {
   } finally {
     loading.value = false;
   }
-}
-
-function loginWithGoogle() {
-  window.location.href = import.meta.env.VITE_API_URL + '/auth/google';
-}
-
-function loginWithFacebook() {
-  window.location.href = import.meta.env.VITE_API_URL + '/auth/facebook';
 }
 </script>

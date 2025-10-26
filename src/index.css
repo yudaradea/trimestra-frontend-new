@@ -44,3 +44,23 @@ body {
   opacity: 0;
   transform: translateY(-10px);
 }
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #print-area,
+  #print-area * {
+    visibility: visible;
+  }
+  #print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 4px;
+  }
+}

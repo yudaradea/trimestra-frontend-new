@@ -263,6 +263,9 @@ import { useToast } from 'vue-toastification';
 import Header from '@/components/Header.vue';
 import Modal from '@/components/Modal.vue';
 import CustomSelect from '@/components/CustomSelect.vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const auth = useAuthStore();
 const userName = computed(() => auth.getUserName);
@@ -400,5 +403,7 @@ onMounted(async () => {
   }
 });
 
-const connectDevice = () => toast.info('Fitur sync alat segera hadir!');
+const connectDevice = () => {
+  router.push('/activity');
+};
 </script>

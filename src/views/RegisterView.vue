@@ -81,36 +81,6 @@
           </button>
         </form>
 
-        <!-- Divider -->
-        <div class="flex items-center my-6">
-          <div class="flex-1 h-px bg-gray-300"></div>
-          <span class="px-3 text-sm text-gray-500"
-            >Atau daftar menggunakan</span
-          >
-          <div class="flex-1 h-px bg-gray-300"></div>
-        </div>
-
-        <!-- SOCIAL LOGIN -->
-        <div class="grid gap-3">
-          <button
-            type="button"
-            @click="loginWithGoogle"
-            class="flex items-center justify-center gap-2 py-3 border border-red-400 rounded-xl"
-          >
-            <i class="text-lg text-red-500 ri-google-fill"></i>
-            <span class="font-medium text-red-500">Google</span>
-          </button>
-
-          <button
-            type="button"
-            @click="loginWithFacebook"
-            class="flex items-center justify-center gap-2 py-3 border border-blue-400 rounded-xl"
-          >
-            <i class="text-lg text-blue-500 ri-facebook-circle-fill"></i>
-            <span class="font-medium text-blue-500">Facebook</span>
-          </button>
-        </div>
-
         <!-- FOOTER -->
         <div class="mt-6 text-sm text-center">
           Sudah punya akun?
@@ -161,11 +131,4 @@ const handleRegister = async () => {
     loading.value = false;
   }
 };
-
-function loginWithGoogle() {
-  window.location.href = import.meta.env.VITE_API_URL + '/auth/google';
-}
-function loginWithFacebook() {
-  window.location.href = import.meta.env.VITE_API_URL + '/auth/facebook';
-}
 </script>

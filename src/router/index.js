@@ -20,6 +20,7 @@ import ExerciseView from '@/views/ExerciseView.vue';
 import ExerciseDetailView from '@/views/ExerciseDetailView.vue';
 import LaporanView from '@/views/LaporanView.vue';
 import NotificationView from '@/views/NotificationView.vue';
+import DeviceView from '@/views/DeviceView.vue';
 
 // admin
 import DashboardView from '@/views/admin/DashboardView.vue';
@@ -38,6 +39,9 @@ import AllergyView from '@/views/admin/AllergyView.vue';
 import AdminExercies from '@/views/admin/ExerciseView.vue';
 
 import NutritionReqView from '@/views/admin/NutritionReqView.vue';
+
+import DevicesView from '@/views/admin/DevicesView.vue';
+import LinkedDevicesView from '@/views/admin/LinkedDevicesView.vue';
 
 // error pages
 import NotFound from '@/errorPages/NotFound.vue';
@@ -127,6 +131,20 @@ const routes = [
     path: '/admin/allergy',
     name: 'admin-allergy',
     component: AllergyView,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+
+  {
+    path: '/admin/devices',
+    name: 'admin-devices',
+    component: DevicesView,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+
+  {
+    path: '/admin/linked-devices',
+    name: 'admin-linked-devices',
+    component: LinkedDevicesView,
     meta: { requiresAuth: true, requiresAdmin: true },
   },
 
@@ -255,6 +273,14 @@ const routes = [
     component: NotificationView,
     meta: { requiresAuth: true },
   },
+
+  {
+    path: '/activity',
+    name: 'activity',
+    component: DeviceView,
+    meta: { requiresAuth: true },
+  },
+
   // error pages
   { path: '/401', name: 'Unauthorized', component: Unauthorize },
   { path: '/403', name: 'Forbidden', component: Forbidden },

@@ -67,10 +67,13 @@
         label="Nutrition Target"
         :children="[
           // { to: '/admin/food-category/create', label: 'Add Food Category' },
-          { to: '/admin/nutrition-requirement', label: 'List Nutrition Target' },
+          {
+            to: '/admin/nutrition-requirement',
+            label: 'List Nutrition Target',
+          },
         ]"
       />
-      
+
       <NavItemGroup
         icon="ri-command-fill"
         label="Allergies"
@@ -80,6 +83,15 @@
         ]"
       />
 
+      <NavItemGroup
+        icon="ri-command-fill"
+        label="ESP Devices"
+        :children="[
+          // { to: '/admin/food-category/create', label: 'Add Food Category' },
+          { to: '/admin/devices', label: 'List Devices' },
+          { to: '/admin/linked-devices', label: 'List User Devices' },
+        ]"
+      />
     </nav>
   </aside>
 </template>
