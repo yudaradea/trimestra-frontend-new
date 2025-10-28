@@ -21,6 +21,33 @@
             </select>
           </div>
 
+          <!-- search -->
+          <div class="relative">
+            <input
+              v-model="search"
+              @input="fetchDevices(1)"
+              type="text"
+              class="py-2 pl-10 pr-3 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+              placeholder="Cari ... "
+            />
+            <div
+              class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+            >
+              <svg
+                class="w-4 h-4 text-gray-400"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
+
           <button
             @click="printLabel(selectedCodes)"
             class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -75,6 +102,12 @@
               Barcode
             </th>
             <th
+              class="p-3 font-medium text-center text-gray-600 border-b border-gray-200"
+            >
+              User
+            </th>
+
+            <th
               class="p-3 font-medium text-right text-gray-600 border-b border-gray-200"
             >
               Aksi
@@ -109,6 +142,12 @@
                 }}</span>
               </div>
             </td>
+            <td class="p-3 text-center align-middle border-b border-gray-200">
+              <span v-if="item.user?.name" class="text-gray-800">
+                {{ item.user.name }}
+              </span>
+              <span v-else class="text-gray-400">Belum Tertaut</span>
+            </td>
             <td class="p-3 align-middle border-b border-gray-200">
               <div class="flex justify-end gap-2">
                 <button
@@ -133,7 +172,7 @@
             </td>
           </tr>
 
-          <!-- jika tidak ada data munculkan tombol untuk menambah data -->
+          <!-- jika tidak ada  -->
           <tr v-if="devices.length === 0">
             <td colspan="5" class="p-6 text-center text-gray-500">
               Tidak ada data device.
@@ -246,6 +285,7 @@ const devices = ref([]);
 const meta = ref({});
 const rowPerPage = ref(10);
 const loading = ref(false);
+const search = ref('');
 
 const showFormModal = ref(false);
 const showDeleteModal = ref(false);
@@ -265,6 +305,7 @@ async function fetchDevices(page = 1) {
     const res = await axios.get('/device', {
       params: {
         per_page: rowPerPage.value,
+        search: search.value,
         page,
       },
     });

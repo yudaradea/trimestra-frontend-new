@@ -84,7 +84,7 @@
       />
 
       <NavItemGroup
-        icon="ri-command-fill"
+        icon="ri-timer-flash-line"
         label="ESP Devices"
         :children="[
           // { to: '/admin/food-category/create', label: 'Add Food Category' },

@@ -170,11 +170,11 @@ async function checkStatus() {
   }
 }
 
-async function linkDevice(code = null) {
+async function linkDevice() {
   try {
     await axios.post('/device/link', {
       user_id: userId,
-      device_code: code || deviceCode.value,
+      device_code: deviceCode.value,
     });
     toast.success('Device berhasil ditautkan');
     await checkStatus();

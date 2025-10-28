@@ -20,14 +20,21 @@
 
 <script setup>
 import { useRoute } from 'vue-router';
-import { Home, LineChart, Activity, User, History } from 'lucide-vue-next';
+import {
+  Home,
+  LineChart,
+  Activity,
+  User,
+  History,
+  Dumbbell,
+} from 'lucide-vue-next';
 
 const route = useRoute();
 const menuItems = [
   { label: 'Laporan', to: '/reports', icon: LineChart },
   { label: 'Diary', to: '/diary', icon: History },
   { label: 'Home', to: '/', icon: Home },
-  { label: 'Exercise', to: '/exercise', icon: Activity },
+  { label: 'Exercise', to: '/exercise', icon: Dumbbell },
   { label: 'Profile', to: '/profile', icon: User },
 ];
 

@@ -118,7 +118,8 @@
               @click="connectDevice"
               class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-teal-600 transition-colors bg-white rounded-full hover:bg-gray-50"
             >
-              Hubungkan
+              <p v-if="isDeviceLinked == null">Hubungkan</p>
+              <p v-else>Monitor</p>
               <svg
                 class="w-4 h-4"
                 fill="none"
@@ -389,6 +390,13 @@ const fetchCategories = async () => {
   }
 };
 
+const connectDevice = () => {
+  router.push('/activity');
+};
+
+// check status user device linked
+const isDeviceLinked = auth.user.devices;
+
 onMounted(async () => {
   try {
     await Promise.all([
@@ -402,8 +410,4 @@ onMounted(async () => {
     initialLoading.value = false;
   }
 });
-
-const connectDevice = () => {
-  router.push('/activity');
-};
 </script>
