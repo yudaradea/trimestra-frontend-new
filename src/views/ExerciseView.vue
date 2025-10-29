@@ -13,9 +13,41 @@
 
     <!-- Content -->
     <div v-else class="px-4 py-6 space-y-6">
-      <!-- Intro -->
-      <div class="text-sm text-center text-gray-700">
-        Pilih jenis latihan yang kamu suka dan mulai bergerak 💪
+      <!-- Monitor Aktivitas -->
+      <div
+        class="w-full px-4 md:px-10 py-6 bg-gradient-to-r from-[#399F96] to-[#3CAEA3]/70 rounded-[32px]"
+      >
+        <div class="flex items-center justify-between">
+          <!-- Teks Kiri -->
+          <div class="text-white">
+            <h3 class="text-base font-semibold leading-tight">Monitor</h3>
+            <h3 class="text-base font-semibold leading-tight">
+              Aktivitas Sehat
+            </h3>
+          </div>
+
+          <!-- Tombol Kanan -->
+          <button
+            @click="connectDevice"
+            class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-teal-600 transition-colors bg-white rounded-full hover:bg-gray-50"
+          >
+            <p v-if="isDeviceLinked == null">Hubungkan</p>
+            <p v-else>Monitor</p>
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
 
       <!-- Search -->
@@ -94,7 +126,11 @@ import Header from '@/components/Header.vue';
 import BottomNav from '@/components/BottomNav.vue';
 import { onMounted, ref, watch } from 'vue';
 import api from '@/lib/axios';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
 
+const router = useRouter();
+const auth = useAuthStore();
 const initialLoading = ref(true);
 const exercises = ref([]);
 const selectedJenis = ref('');
@@ -169,6 +205,13 @@ const fetchExercises = async (append = false) => {
     isFetching.value = false;
   }
 };
+
+const connectDevice = () => {
+  router.push('/activity');
+};
+
+// check status user device linked
+const isDeviceLinked = auth.user.devices;
 
 onMounted(async () => {
   initialLoading.value = true;

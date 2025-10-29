@@ -58,7 +58,7 @@
               stroke-linecap="round"
               stroke="currentColor"
               fill="none"
-              :stroke-dasharray="`${percentages}, 100`"
+              :stroke-dasharray="`${Math.max(percentages, 0)}, 100`"
               d="M18 2a16 16 0 1 1 0 32 16 16 0 1 1 0-32"
             />
           </svg>
@@ -208,7 +208,11 @@
                 <!-- Untuk exercise -->
                 <template v-else>
                   <p class="font-medium">
-                    {{ item.exercise?.name || item.user_exercise?.name }}
+                    {{
+                      item.exercise?.name ||
+                      item.user_exercise?.name ||
+                      item.activity_name
+                    }}
                   </p>
                   <p class="text-xs text-gray-500">
                     Durasi: {{ item.duration }} menit •
@@ -322,6 +326,7 @@ const diary = ref(null); // summary dari /diary
 const foodDiary = ref([]); // detail makanan dari /food-diary
 const currentDate = ref(new Date());
 const percentages = ref(0);
+console.log(percentages);
 
 // Nutrisi
 const nutrients = [
