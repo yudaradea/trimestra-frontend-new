@@ -141,7 +141,7 @@
             <img
               :src="food.image_url"
               alt="Food"
-              class="flex-shrink-0 object-cover w-full h-32 rounded-md sm:h-28 sm:w-28"
+              class="flex-shrink-0 object-fill h-24 rounded-md w-28"
               @error="
                 $event.target.src =
                   'https://placehold.co/112x112/e2e8f0/94a3b8?text=Image+Not+Found'
