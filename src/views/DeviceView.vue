@@ -157,8 +157,10 @@
                 {{ item.activity_name }}
               </p>
               <p class="text-xs text-gray-500">
-                Durasi {{ formatDuration(item.duration, item.seconds) }} • Pukul
-                {{ formatTime(item.created_at) }}
+                Durasi {{ formatDuration(item.duration, item.seconds) }}
+              </p>
+              <p class="text-xs text-gray-500">
+                Pukul {{ formatRange(item.created_at, item.duration) }}
               </p>
             </div>
             <div class="flex items-center gap-3">
@@ -587,6 +589,24 @@ function addDays(d, delta) {
   const next = new Date(dateObj);
   next.setDate(next.getDate() + delta);
   return next;
+}
+
+function formatRange(createdAt, durationMinutes) {
+  if (!createdAt || !durationMinutes) return '-';
+
+  const end = new Date(createdAt); // waktu selesai
+  const start = new Date(end.getTime() - durationMinutes * 60 * 1000); // mundur sesuai durasi
+
+  const startStr = start.toLocaleTimeString('id-ID', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+  const endStr = end.toLocaleTimeString('id-ID', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+  return `${startStr} – ${endStr}`;
 }
 
 function formatTime(dateStr) {

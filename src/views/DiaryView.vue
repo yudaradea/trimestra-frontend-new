@@ -326,7 +326,6 @@ const diary = ref(null); // summary dari /diary
 const foodDiary = ref([]); // detail makanan dari /food-diary
 const currentDate = ref(new Date());
 const percentages = ref(0);
-console.log(percentages);
 
 // Nutrisi
 const nutrients = [
