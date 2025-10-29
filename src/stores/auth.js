@@ -87,11 +87,6 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async sendPin(email) {
-      this.email = email;
-      await api.post('/forgot-password', { email });
-    },
-
     async resendPin() {
       if (this.cooldown > 0) return;
       await this.sendPin(this.email);
