@@ -18,7 +18,7 @@
         <!-- Foto Profil -->
         <div class="flex flex-col items-center">
           <label class="block mb-2 text-sm font-medium text-gray-700"
-            >Foto Profil</label
+            >Foto Profil (Maksimal 2MB)</label
           >
           <div class="relative w-24 h-24">
             <img
@@ -539,7 +539,7 @@ const handleSaveProfile = async () => {
       // Sesuaikan dengan kebutuhan backend:
       // Option 1: Kirim empty array (tidak append apa-apa)
       // Option 2: Kirim string khusus
-      formData.append('food_allergies[]', 'tidak punya');
+      formData.append('food_allergies[]', 'Tidak Punya');
     }
 
     // Debug log

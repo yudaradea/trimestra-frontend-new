@@ -23,8 +23,9 @@
         <!-- Foto Profil -->
         <div class="flex flex-col items-center">
           <label class="block mb-2 text-sm font-medium text-gray-700"
-            >Foto Profil</label
+            >Foto Profil (Maksimal 2MB)</label
           >
+
           <div class="relative w-24 h-24 group">
             <img
               v-if="previewImage"
@@ -695,7 +696,7 @@ const handleUpdateProfile = async () => {
         formData.append('food_allergies[]', name);
       });
     } else if (isNoAllergySelected.value) {
-      formData.append('food_allergies[]', 'tidak punya');
+      formData.append('food_allergies[]', 'Tidak Punya');
     }
 
     // Send request menggunakan profile store
