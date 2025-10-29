@@ -1,25 +1,54 @@
 <template>
-  <div class="overflow-x-auto">
-    <table class="min-w-full text-sm text-left border rounded">
-      <thead class="text-gray-600 bg-gray-50">
-        <tr>
-          <th class="px-4 py-2">Nama</th>
-          <th class="px-4 py-2">Email</th>
-          <th class="px-4 py-2">Tanggal Daftar</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="user in users"
-          :key="user.id"
-          class="border-t hover:bg-gray-50"
-        >
-          <td class="px-4 py-2 font-medium text-gray-800">{{ user.name }}</td>
-          <td class="px-4 py-2">{{ user.email }}</td>
-          <td class="px-4 py-2">{{ formatDate(user.created_at) }}</td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="bg-white border border-gray-200 rounded-lg shadow-sm">
+    <div class="rounded-lg overflow-x-">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="text-gray-600 bg-gray-50">
+          <tr>
+            <th
+              scope="col"
+              class="px-6 py-4 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+            >
+              Nama
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-4 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+            >
+              Email
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-4 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+            >
+              Tanggal Daftar
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="user in users"
+            :key="user.id"
+            class="border-t hover:bg-gray-50"
+          >
+            <td
+              class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap"
+            >
+              {{ user.name }}
+            </td>
+            <td
+              class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap"
+            >
+              {{ user.email }}
+            </td>
+            <td
+              class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap"
+            >
+              {{ formatDate(user.created_at) }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
