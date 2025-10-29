@@ -2,6 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import HomeView from '@/views/HomeView.vue';
 import LoginView from '@/views/LoginView.vue';
+import ForgotPasswordView from '@/views/ForgotPasswordView.vue';
+import VerifyPinView from '@/views/VerifyPinView.vue';
+import ResetPasswordView from '@/views/ResetPasswordView.vue';
 import RegisterView from '@/views/RegisterView.vue';
 import RegisterSuccessView from '@/views/RegisterSuccessView.vue';
 import ProfileSetupView from '@/views/ProfileSetupView.vue';
@@ -166,6 +169,7 @@ const routes = [
     component: RegisterView,
     meta: { requiresNoAuth: true },
   },
+
   {
     path: '/register-success',
     name: 'register-success',
@@ -177,6 +181,24 @@ const routes = [
     name: 'profile-setup',
     component: ProfileSetupView,
     meta: { requiresAuth: true },
+  },
+  {
+    path: '/forgot-password',
+    name: 'forgot-password',
+    component: ForgotPasswordView,
+    meta: { requiresNoAuth: true },
+  },
+  {
+    path: '/verify-pin',
+    name: 'verify-pin',
+    component: VerifyPinView,
+    meta: { requiresNoAuth: true },
+  },
+  {
+    path: '/reset-password',
+    name: 'reset-password',
+    component: ResetPasswordView,
+    meta: { requiresNoAuth: true },
   },
   {
     path: '/profile',

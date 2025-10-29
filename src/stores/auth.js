@@ -6,6 +6,9 @@ export const useAuthStore = defineStore('auth', {
     user: null,
     token: localStorage.getItem('token'),
     loading: false,
+    email: '',
+    cooldown: 0,
+    timer: null,
   }),
 
   getters: {
@@ -70,6 +73,50 @@ export const useAuthStore = defineStore('auth', {
         this.user = null;
         localStorage.removeItem('token');
       }
+    },
+
+    async forgotPassword(email) {
+      try {
+        // Simpan email ke state untuk halaman verifyPin
+        this.email = email;
+
+        await api.post('/forgot-password', { email });
+        this.startCooldown();
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async sendPin(email) {
+      this.email = email;
+      await api.post('/forgot-password', { email });
+    },
+
+    async resendPin() {
+      if (this.cooldown > 0) return;
+      await this.sendPin(this.email);
+      this.startCooldown();
+    },
+
+    startCooldown() {
+      this.cooldown = 60;
+      const interval = setInterval(() => {
+        if (this.cooldown > 0) this.cooldown--;
+        else clearInterval(interval);
+      }, 1000);
+    },
+
+    async verifyPin(pin) {
+      return api.post('/verify-pin', { email: this.email, pin });
+    },
+
+    async resetPassword({ pin, password, password_confirmation }) {
+      return api.post('/reset-password', {
+        email: this.email,
+        pin,
+        password,
+        password_confirmation,
+      });
     },
 
     async fetchUser() {

@@ -59,7 +59,12 @@
 
           <!-- Forgot -->
           <div class="text-right">
-            <a href="#" class="text-xs text-gray-500">Lupa password?</a>
+            <router-link
+              to="/forgot-password"
+              class="text-sm font-semibold text-teal-600"
+            >
+              Lupa Password?
+            </router-link>
           </div>
 
           <!-- Submit -->
