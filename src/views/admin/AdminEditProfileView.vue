@@ -392,7 +392,7 @@
               </div>
               <p class="mt-2 text-xs text-gray-500">
                 Pilih alergi makanan yang Kamu miliki. **Pastikan opsi "Tidak
-                Punya" di-unselect jika memilih alergi lain.**
+                Ada" di-unselect jika memilih alergi lain.**
               </p>
             </div>
           </section>

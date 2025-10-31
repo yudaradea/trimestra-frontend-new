@@ -433,7 +433,7 @@
                 </div>
               </div>
               <p class="mt-2 text-xs text-gray-500">
-                Pilih alergi makanan user. **Pastikan opsi "Tidak Punya"
+                Pilih alergi makanan user. **Pastikan opsi "Tidak Ada"
                 di-unselect jika memilih alergi lain.**
               </p>
             </div>
