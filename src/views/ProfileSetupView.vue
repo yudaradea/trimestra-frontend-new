@@ -542,9 +542,6 @@ const handleSaveProfile = async () => {
       formData.append('food_allergies[]', 'Tidak Punya');
     }
 
-    // Debug log
-    console.log('Selected Allergy Names:', allergyNames);
-
     // Send request menggunakan axios
     const response = await api.post('/profile', formData, {
       headers: {

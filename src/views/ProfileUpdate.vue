@@ -495,6 +495,9 @@ const hasChanges = computed(() => {
 const onAllergyCheckboxChange = (allergyId) => {
   const success = handleAllergyChange(allergyId);
 
+  console.log('clicked id:', allergyId, typeof allergyId);
+  console.log('selectedAllergies before:', selectedAllergies.value);
+
   if (!success) {
     toast.warning(
       'Silakan unselect "Tidak Punya" terlebih dahulu untuk memilih alergi lain',

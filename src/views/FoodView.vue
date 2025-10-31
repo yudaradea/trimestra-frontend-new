@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-md min-h-screen mx-auto bg-white">
+  <div class="max-w-md min-h-screen mx-auto mb-10 bg-white">
     <Header title="Daftar Makanan" showBack />
 
     <div
@@ -17,7 +17,7 @@
           @input="resetAndFetch"
           type="text"
           placeholder="Cari makanan..."
-          class="w-full px-4 py-2 border rounded"
+          class="w-full input"
         />
       </div>
 
