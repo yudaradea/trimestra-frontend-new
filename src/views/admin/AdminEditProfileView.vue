@@ -1,10 +1,8 @@
 <template>
   <Layout title="Perbarui Profil">
-    <div class="w-full max-w-4xl p-8 mx-auto bg-white shadow-lg rounded-xl">
+    <div class="w-full max-w-5xl p-8 mx-auto bg-white shadow-lg rounded-xl">
       <header class="mb-8">
-        <h1 class="text-3xl font-bold text-teal-700">
-          ✏️ Edit Profil Pengguna
-        </h1>
+        <h1 class="text-3xl font-bold text-teal-700">✏️ Edit Profil</h1>
         <p class="mt-1 text-gray-600">
           Perbarui semua informasi detail profil Anda.
         </p>
@@ -515,7 +513,7 @@ const onAllergyCheckboxChange = (allergyId) => {
 
   if (!success) {
     toast.warning(
-      'Silakan unselect "Tidak Punya" terlebih dahulu untuk memilih alergi lain',
+      'Silakan unselect "Tidak Ada" terlebih dahulu untuk memilih alergi lain',
       {
         timeout: 3000,
       }
@@ -715,7 +713,7 @@ const handleUpdateProfile = async () => {
       });
     } else if (isNoAllergySelected.value) {
       // PERBAIKAN: Menggunakan 'Tidak Punya' sesuai dengan data yang diharapkan di DB
-      formData.append('food_allergies[]', 'Tidak Punya');
+      formData.append('food_allergies[]', 'Tidak Ada');
     }
 
     // Send request menggunakan profile store
@@ -733,7 +731,7 @@ const handleUpdateProfile = async () => {
     profileData.value.foto_profile = null;
 
     // Redirect atau refresh
-    router.push('/profile');
+    router.push('/admin/profile');
   } catch (error) {
     console.error('Update profile error:', error);
     const message =

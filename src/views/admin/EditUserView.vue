@@ -1,283 +1,464 @@
 <template>
   <Layout title="Edit User">
-    <!-- Loading State -->
-    <div
-      v-if="initialLoading"
-      class="flex flex-col items-center justify-center py-12"
-    >
-      <div class="text-4xl animate-spin">⏳</div>
-      <span class="mt-4 text-sm text-gray-600">Memuat data user...</span>
-    </div>
+    <div class="w-full max-w-5xl p-8 mx-auto bg-white shadow-lg rounded-xl">
+      <header class="mb-8">
+        <h1 class="text-3xl font-bold text-teal-700">⚙️ Edit Data Pengguna</h1>
+        <p class="mt-1 text-gray-600">
+          Perbarui informasi akun dan detail profil dari pengguna ini.
+        </p>
+        <div class="h-1 mt-4 bg-teal-100 rounded"></div>
+      </header>
 
-    <div v-else class="p-6 bg-white rounded shadow">
-      <h2 class="mb-6 text-xl font-semibold">Form Edit User</h2>
-
-      <form
-        @submit.prevent="handleUpdateUser"
-        class="grid grid-cols-1 gap-4 md:grid-cols-2"
+      <div
+        v-if="initialLoading"
+        class="flex flex-col items-center justify-center py-20"
       >
-        <!-- Foto Profil -->
-        <div class="flex flex-col items-center col-span-2">
-          <label class="block mb-2 text-sm font-medium text-gray-700"
-            >Foto Profil</label
-          >
-          <div class="relative w-24 h-24 group">
-            <img
-              v-if="previewImage"
-              :src="previewImage"
-              alt="Preview"
-              class="object-cover w-24 h-24 border-2 border-gray-300 rounded-full"
-            />
-            <div
-              v-else
-              class="flex items-center justify-center w-24 h-24 text-gray-400 bg-gray-100 border-2 border-gray-300 rounded-full"
+        <div class="text-5xl animate-spin">⏳</div>
+        <span class="mt-4 text-lg text-gray-600">Memuat data pengguna...</span>
+      </div>
+
+      <form v-else @submit.prevent="handleUpdateUser" class="space-y-10">
+        <section class="flex items-start pb-8 space-x-10 border-b">
+          <div class="flex flex-col items-center flex-shrink-0 w-48">
+            <label class="block mb-4 text-base font-semibold text-gray-700"
+              >Foto Profil (Maksimal 2MB)</label
             >
-              <span class="text-xs text-center">Pilih<br />Gambar</span>
-            </div>
-            <div
-              class="absolute inset-0 flex items-center justify-center transition-opacity bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100"
-            >
-              <span class="text-xs text-center text-white"
-                >Ganti<br />Foto</span
-              >
-            </div>
-            <input
-              type="file"
-              accept="image/*"
-              @change="handleFileChange"
-              class="absolute inset-0 opacity-0 cursor-pointer"
-            />
-          </div>
-          <p class="mt-2 text-xs text-gray-500">Klik untuk mengganti foto</p>
-        </div>
 
-        <!-- Nama -->
-        <div>
-          <label class="block mb-1 text-sm font-medium">Nama</label>
-          <input v-model="form.name" type="text" class="input" required />
-        </div>
-
-        <!-- Email -->
-        <div>
-          <label class="block mb-1 text-sm font-medium">Email</label>
-          <input v-model="form.email" type="email" class="input" required />
-        </div>
-
-        <!-- Role -->
-        <div>
-          <label class="block mb-1 text-sm font-medium">Role</label>
-          <select v-model="form.role" class="input">
-            <option value="">Pilih Role</option>
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
-
-        <!-- Password (opsional) -->
-        <div>
-          <label class="block mb-1 text-sm font-medium"
-            >Password (opsional)</label
-          >
-          <input v-model="form.password" type="password" class="input" />
-          <p class="mt-1 text-xs text-gray-500">
-            Kosongkan jika tidak ingin mengubah password
-          </p>
-        </div>
-
-        <!-- Konfirmasi Password -->
-        <div>
-          <label class="block mb-1 text-sm font-medium"
-            >Konfirmasi Password</label
-          >
-          <input
-            v-model="form.password_confirmation"
-            type="password"
-            class="input"
-          />
-        </div>
-
-        <!-- Tanggal Lahir -->
-        <div>
-          <label class="block mb-1 text-sm font-medium">Tanggal Lahir</label>
-          <input v-model="form.birth_date" type="date" class="input" />
-        </div>
-
-        <!-- Tinggi -->
-        <div>
-          <label class="block mb-1 text-sm font-medium">Tinggi (cm)</label>
-          <input v-model="form.height" type="number" class="input" step="0.1" />
-        </div>
-
-        <!-- Berat -->
-        <div>
-          <label class="block mb-1 text-sm font-medium">Berat (kg)</label>
-          <input v-model="form.weight" type="number" class="input" step="0.1" />
-        </div>
-
-        <!-- No HP -->
-        <div>
-          <label class="block mb-1 text-sm font-medium">No HP</label>
-          <input v-model="form.no_hp" type="text" class="input" />
-        </div>
-
-        <!-- Durasi Tidur -->
-        <div>
-          <label class="block mb-1 text-sm font-medium"
-            >Durasi Tidur Harian</label
-          >
-          <select v-model="form.sleep_duration" class="input">
-            <option value="">Pilih Durasi Tidur</option>
-            <option value="<7">Kurang dari 7 jam</option>
-            <option value="7-9">7-9 jam</option>
-            <option value="9-10">9-10 jam</option>
-          </select>
-        </div>
-
-        <!-- Lokasi -->
-        <div class="col-span-2">
-          <label class="block mb-2 text-sm font-medium">Lokasi</label>
-          <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-            <!-- Provinsi -->
-            <select v-model="form.province_id" class="input">
-              <option value="">Pilih Provinsi</option>
-              <option
-                v-for="province in provinces"
-                :key="province.id"
-                :value="province.id"
-              >
-                {{ province.name }}
-              </option>
-            </select>
-
-            <!-- Kabupaten/Kota -->
-            <select
-              v-model="form.regency_id"
-              :disabled="!form.province_id"
-              class="input"
-            >
-              <option value="">Pilih Kabupaten/Kota</option>
-              <option
-                v-for="regency in regencies"
-                :key="regency.id"
-                :value="regency.id"
-              >
-                {{ regency.name }}
-              </option>
-            </select>
-
-            <!-- Kecamatan -->
-            <select
-              v-model="form.district_id"
-              :disabled="!form.regency_id"
-              class="input"
-            >
-              <option value="">Pilih Kecamatan</option>
-              <option
-                v-for="district in districts"
-                :key="district.id"
-                :value="district.id"
-              >
-                {{ district.name }}
-              </option>
-            </select>
-
-            <!-- Kelurahan/Desa -->
-            <select
-              v-model="form.village_id"
-              :disabled="!form.district_id"
-              class="input"
-            >
-              <option value="">Pilih Kelurahan/Desa</option>
-              <option
-                v-for="village in villages"
-                :key="village.id"
-                :value="village.id"
-              >
-                {{ village.name }}
-              </option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Status Hamil -->
-        <div>
-          <label class="block mb-1 text-sm font-medium">Status Hamil</label>
-          <select v-model="form.is_pregnant" class="input">
-            <option :value="0">Tidak Hamil</option>
-            <option :value="1">Hamil</option>
-          </select>
-        </div>
-
-        <!-- Field tambahan jika hamil -->
-        <div v-if="form.is_pregnant == 1">
-          <label class="block mb-1 text-sm font-medium"
-            >Usia Kehamilan (minggu)</label
-          >
-          <input
-            v-model="form.weeks"
-            type="number"
-            class="input"
-            min="1"
-            max="42"
-          />
-        </div>
-        <div v-if="form.is_pregnant == 1" class="col-span-2">
-          <label class="block mb-1 text-sm font-medium">HPHT</label>
-          <input v-model="form.hpht" type="date" class="input" />
-        </div>
-
-        <!-- Alergi Makanan -->
-        <div class="col-span-2">
-          <label class="block mb-2 text-sm font-medium text-teal-600"
-            >Alergi Makanan</label
-          >
-          <div class="grid grid-cols-2 gap-2 mt-1 md:grid-cols-3">
-            <div
-              v-for="allergy in allergies"
-              :key="allergy.id"
-              class="flex items-center"
-            >
-              <input
-                type="checkbox"
-                :id="`allergy-${allergy.id}`"
-                :value="allergy.id"
-                :checked="selectedAllergies.includes(allergy.id)"
-                @change="onAllergyCheckboxChange(allergy.id)"
-                class="w-4 h-4 text-teal-600 rounded focus:ring-teal-500"
+            <div class="relative w-32 h-32 group">
+              <img
+                v-if="previewImage"
+                :src="previewImage"
+                alt="Preview"
+                class="object-cover w-32 h-32 transition-shadow duration-300 border-4 border-teal-300 rounded-full shadow-md ring-4 ring-teal-100 group-hover:shadow-xl"
               />
-              <label
-                :for="`allergy-${allergy.id}`"
-                class="ml-2 text-sm text-gray-700 cursor-pointer"
+              <div
+                v-else
+                class="flex items-center justify-center w-32 h-32 text-gray-500 bg-gray-100 border-4 border-gray-300 rounded-full shadow-md"
               >
-                {{ allergy.name }}
-              </label>
+                <span class="text-sm font-medium text-center"
+                  >Pilih<br />Gambar</span
+                >
+              </div>
+              <div
+                class="absolute inset-0 flex items-center justify-center transition-opacity bg-black rounded-full opacity-0 cursor-pointer bg-opacity-60 group-hover:opacity-100"
+              >
+                <span
+                  class="text-sm font-bold tracking-wider text-center text-white"
+                  >Ganti<br />Foto</span
+                >
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                @change="handleFileChange"
+                class="absolute inset-0 opacity-0 cursor-pointer"
+              />
+            </div>
+            <p class="mt-3 text-sm text-gray-500">
+              Klik area foto untuk mengganti
+            </p>
+          </div>
+
+          <div class="grid flex-grow grid-cols-2 gap-4">
+            <div>
+              <label for="name" class="block text-sm font-medium text-teal-600"
+                >Nama Lengkap</label
+              >
+              <input
+                type="text"
+                id="name"
+                v-model="form.name"
+                required
+                class="block w-full px-4 py-2 mt-1 transition duration-150 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
+              />
+            </div>
+
+            <div>
+              <label for="email" class="block text-sm font-medium text-teal-600"
+                >Email</label
+              >
+              <input
+                type="email"
+                id="email"
+                v-model="form.email"
+                required
+                class="block w-full px-4 py-2 mt-1 transition duration-150 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
+              />
+            </div>
+
+            <div>
+              <label for="no_hp" class="block text-sm font-medium text-teal-600"
+                >Nomor Handphone</label
+              >
+              <input
+                type="tel"
+                id="no_hp"
+                v-model="form.no_hp"
+                placeholder="Masukkan nomor HP"
+                class="block w-full px-4 py-2 mt-1 transition duration-150 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
+              />
+            </div>
+
+            <div>
+              <label
+                for="birth_date"
+                class="block text-sm font-medium text-teal-600"
+                >Tanggal Lahir</label
+              >
+              <input
+                type="date"
+                id="birth_date"
+                v-model="form.birth_date"
+                required
+                class="block w-full px-4 py-2 mt-1 transition duration-150 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
+              />
+            </div>
+
+            <div>
+              <label for="role" class="block text-sm font-medium text-teal-600"
+                >Role Pengguna</label
+              >
+              <select
+                v-model="form.role"
+                id="role"
+                class="block w-full px-4 py-2 mt-1 transition duration-150 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
+              >
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
             </div>
           </div>
-          <p class="mt-2 text-xs text-gray-500">
-            Pilih alergi makanan yang dimiliki user. Jika pilih "Tidak Punya",
-            unselect terlebih dahulu untuk memilih alergi lain.
-          </p>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-6">
+          <section class="space-y-6">
+            <h2 class="pb-2 text-xl font-semibold text-gray-700 border-b">
+              Keamanan Akun & Detail Kesehatan
+            </h2>
+
+            <div>
+              <label
+                for="password"
+                class="block text-sm font-medium text-teal-600"
+                >Password Baru (opsional)</label
+              >
+              <input
+                v-model="form.password"
+                type="password"
+                id="password"
+                class="block w-full px-4 py-2 mt-1 transition duration-150 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
+              />
+              <p class="mt-1 text-xs text-gray-500">
+                Kosongkan jika tidak ingin mengubah password
+              </p>
+            </div>
+
+            <div>
+              <label
+                for="password_confirmation"
+                class="block text-sm font-medium text-teal-600"
+                >Konfirmasi Password Baru</label
+              >
+              <input
+                v-model="form.password_confirmation"
+                type="password"
+                id="password_confirmation"
+                class="block w-full px-4 py-2 mt-1 transition duration-150 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
+              />
+            </div>
+
+            <div>
+              <label
+                for="weight"
+                class="block text-sm font-medium text-teal-600"
+                >Berat Badan</label
+              >
+              <div class="relative mt-1">
+                <input
+                  type="number"
+                  id="weight"
+                  v-model="form.weight"
+                  required
+                  min="20"
+                  max="300"
+                  step="0.1"
+                  placeholder="Masukkan berat badan"
+                  class="block w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
+                />
+                <span
+                  class="absolute inset-y-0 flex items-center text-sm text-gray-500 right-4"
+                  >Kg</span
+                >
+              </div>
+            </div>
+
+            <div>
+              <label
+                for="height"
+                class="block text-sm font-medium text-teal-600"
+                >Tinggi Badan</label
+              >
+              <div class="relative mt-1">
+                <input
+                  type="number"
+                  id="height"
+                  v-model="form.height"
+                  required
+                  min="50"
+                  max="300"
+                  step="0.1"
+                  placeholder="Masukkan tinggi badan"
+                  class="block w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
+                />
+                <span
+                  class="absolute inset-y-0 flex items-center text-sm text-gray-500 right-4"
+                  >cm</span
+                >
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-teal-600"
+                >Durasi Tidur Harian</label
+              >
+              <div class="p-3 mt-2 space-y-2 border rounded-lg bg-gray-50">
+                <label class="flex items-center">
+                  <input
+                    type="radio"
+                    value="<7"
+                    v-model="form.sleep_duration"
+                    class="text-teal-600 focus:ring-teal-500"
+                  />
+                  <span class="ml-3 text-sm text-gray-700"
+                    >Kurang dari 7 jam</span
+                  >
+                </label>
+                <label class="flex items-center">
+                  <input
+                    type="radio"
+                    value="7-9"
+                    v-model="form.sleep_duration"
+                    class="text-teal-600 focus:ring-teal-500"
+                  />
+                  <span class="ml-3 text-sm text-gray-700">7-9 jam</span>
+                </label>
+                <label class="flex items-center">
+                  <input
+                    type="radio"
+                    value="9-10"
+                    v-model="form.sleep_duration"
+                    class="text-teal-600 focus:ring-teal-500"
+                  />
+                  <span class="ml-3 text-sm text-gray-700">9-10 jam</span>
+                </label>
+              </div>
+            </div>
+          </section>
+
+          <section class="space-y-6">
+            <h2 class="pb-2 text-xl font-semibold text-gray-700 border-b">
+              Lokasi & Status Kehamilan
+            </h2>
+
+            <div class="pt-2">
+              <label class="block text-sm font-medium text-teal-600"
+                >Apakah Pengguna Sedang Hamil?</label
+              >
+              <div class="flex p-3 mt-2 space-x-6 border rounded-lg bg-gray-50">
+                <label class="flex items-center">
+                  <input
+                    type="radio"
+                    :value="0"
+                    v-model="form.is_pregnant"
+                    class="text-teal-600 focus:ring-teal-500"
+                  />
+                  <span class="ml-2 text-sm font-medium text-gray-700"
+                    >Tidak</span
+                  >
+                </label>
+                <label class="flex items-center">
+                  <input
+                    type="radio"
+                    :value="1"
+                    v-model="form.is_pregnant"
+                    class="text-teal-600 focus:ring-teal-500"
+                  />
+                  <span class="ml-2 text-sm font-medium text-gray-700">Ya</span>
+                </label>
+              </div>
+            </div>
+
+            <div v-if="form.is_pregnant == 1" class="pt-4 space-y-4 border-t">
+              <h3 class="text-lg font-semibold text-teal-600">
+                Detail Kehamilan
+              </h3>
+              <div>
+                <label
+                  for="weeks"
+                  class="block text-sm font-medium text-teal-600"
+                  >Usia Kehamilan</label
+                >
+                <div class="relative mt-1">
+                  <input
+                    type="number"
+                    id="weeks"
+                    v-model="form.weeks"
+                    required
+                    min="1"
+                    max="42"
+                    placeholder="Masukkan usia kehamilan"
+                    class="block w-full px-4 py-2 pr-16 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
+                  />
+                  <span
+                    class="absolute inset-y-0 flex items-center text-sm text-gray-500 right-4"
+                    >minggu</span
+                  >
+                </div>
+              </div>
+
+              <div>
+                <label
+                  for="hpht"
+                  class="block text-sm font-medium text-teal-600"
+                  >Hari Pertama Menstruasi Terakhir (HPHT)</label
+                >
+                <div class="relative mt-1">
+                  <input
+                    type="date"
+                    id="hpht"
+                    v-model="form.hpht"
+                    required
+                    class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-teal-600"
+                >Lokasi Tempat Tinggal</label
+              >
+              <div class="mt-2 space-y-3">
+                <select
+                  v-model="form.province_id"
+                  required
+                  class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
+                >
+                  <option value="">Pilih Provinsi</option>
+                  <option
+                    v-for="province in provinces"
+                    :key="province.id"
+                    :value="province.id"
+                  >
+                    {{ province.name }}
+                  </option>
+                </select>
+
+                <select
+                  v-model="form.regency_id"
+                  required
+                  :disabled="!form.province_id"
+                  class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <option value="">Pilih Kabupaten/Kota</option>
+                  <option
+                    v-for="regency in regencies"
+                    :key="regency.id"
+                    :value="regency.id"
+                  >
+                    {{ regency.name }}
+                  </option>
+                </select>
+
+                <select
+                  v-model="form.district_id"
+                  required
+                  :disabled="!form.regency_id"
+                  class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <option value="">Pilih Kecamatan</option>
+                  <option
+                    v-for="district in districts"
+                    :key="district.id"
+                    :value="district.id"
+                  >
+                    {{ district.name }}
+                  </option>
+                </select>
+
+                <select
+                  v-model="form.village_id"
+                  required
+                  :disabled="!form.district_id"
+                  class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <option value="">Pilih Kelurahan/Desa</option>
+                  <option
+                    v-for="village in villages"
+                    :key="village.id"
+                    :value="village.id"
+                  >
+                    {{ village.name }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="pt-2">
+              <label class="block mb-2 text-sm font-medium text-teal-600"
+                >Alergi Makanan</label
+              >
+              <div
+                class="grid grid-cols-2 gap-3 p-3 border rounded-lg bg-gray-50"
+              >
+                <div
+                  v-for="allergy in allergies"
+                  :key="allergy.id"
+                  class="flex items-center"
+                >
+                  <input
+                    type="checkbox"
+                    :id="`allergy-${allergy.id}`"
+                    :value="allergy.id"
+                    :checked="selectedAllergies.includes(allergy.id)"
+                    @change="onAllergyCheckboxChange(allergy.id)"
+                    class="w-4 h-4 text-teal-600 rounded focus:ring-teal-500"
+                  />
+                  <label
+                    :for="`allergy-${allergy.id}`"
+                    class="ml-2 text-sm text-gray-700 cursor-pointer select-none"
+                  >
+                    {{ allergy.name }}
+                  </label>
+                </div>
+              </div>
+              <p class="mt-2 text-xs text-gray-500">
+                Pilih alergi makanan user. **Pastikan opsi "Tidak Punya"
+                di-unselect jika memilih alergi lain.**
+              </p>
+            </div>
+          </section>
+        </div>
+
+        <div class="flex justify-end pt-6 space-x-4 border-t">
+          <button
+            type="button"
+            @click="router.back()"
+            class="px-8 py-3 font-semibold text-teal-600 transition bg-white border-2 border-teal-500 rounded-full shadow-md hover:bg-teal-50"
+          >
+            Batal
+          </button>
+
+          <button
+            type="submit"
+            :disabled="loading"
+            class="px-8 py-3 font-semibold text-white transition bg-teal-600 rounded-full shadow-lg hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-xl"
+          >
+            <span v-if="loading" class="mr-2 animate-spin">🔄</span>
+            <span v-else>Simpan Perubahan</span>
+          </button>
         </div>
       </form>
-
-      <!-- Tombol -->
-      <div class="flex justify-end gap-3 mt-6">
-        <button
-          @click="router.back()"
-          type="button"
-          class="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200"
-        >
-          Batal
-        </button>
-        <button
-          @click="handleUpdateUser"
-          :disabled="loading"
-          class="px-4 py-2 text-white bg-teal-500 rounded-lg hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <span v-if="loading" class="mr-2 animate-spin">⏳</span>
-          {{ loading ? 'Menyimpan...' : 'Update' }}
-        </button>
-      </div>
     </div>
   </Layout>
 </template>

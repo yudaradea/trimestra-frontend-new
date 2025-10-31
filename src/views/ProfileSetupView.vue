@@ -265,7 +265,7 @@
             </div>
           </div>
           <p class="mt-1 text-xs text-gray-500">
-            Pilih alergi makanan yang Kamu miliki. Jika pilih "Tidak Punya",
+            Pilih alergi makanan yang Kamu miliki. Jika pilih "Tidak Ada",
             unselect terlebih dahulu untuk memilih alergi lain.
           </p>
         </div>
@@ -419,7 +419,7 @@ const onAllergyCheckboxChange = (allergyId) => {
 
   if (!success) {
     toast.warning(
-      'Silakan unselect "Tidak Punya" terlebih dahulu untuk memilih alergi lain',
+      'Silakan unselect "Tidak Ada" terlebih dahulu untuk memilih alergi lain',
       {
         timeout: 3000,
       }
@@ -535,11 +535,11 @@ const handleSaveProfile = async () => {
         formData.append('food_allergies[]', name);
       });
     } else if (isNoAllergySelected.value) {
-      // Jika pilih "Tidak Punya", kirim array kosong atau string khusus
+      // Jika pilih "Tidak Ada", kirim array kosong atau string khusus
       // Sesuaikan dengan kebutuhan backend:
       // Option 1: Kirim empty array (tidak append apa-apa)
       // Option 2: Kirim string khusus
-      formData.append('food_allergies[]', 'Tidak Punya');
+      formData.append('food_allergies[]', 'Tidak Ada');
     }
 
     // Send request menggunakan axios

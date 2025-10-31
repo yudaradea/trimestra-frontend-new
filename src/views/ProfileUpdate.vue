@@ -304,7 +304,7 @@
             </div>
           </div>
           <p class="mt-1 text-xs text-gray-500">
-            Pilih alergi makanan yang Kamu miliki. Jika pilih "Tidak Punya",
+            Pilih alergi makanan yang Kamu miliki. Jika pilih "Tidak Ada",
             unselect terlebih dahulu untuk memilih alergi lain.
           </p>
         </div>
@@ -495,12 +495,9 @@ const hasChanges = computed(() => {
 const onAllergyCheckboxChange = (allergyId) => {
   const success = handleAllergyChange(allergyId);
 
-  console.log('clicked id:', allergyId, typeof allergyId);
-  console.log('selectedAllergies before:', selectedAllergies.value);
-
   if (!success) {
     toast.warning(
-      'Silakan unselect "Tidak Punya" terlebih dahulu untuk memilih alergi lain',
+      'Silakan unselect "Tidak Ada" terlebih dahulu untuk memilih alergi lain',
       {
         timeout: 3000,
       }
@@ -699,7 +696,7 @@ const handleUpdateProfile = async () => {
         formData.append('food_allergies[]', name);
       });
     } else if (isNoAllergySelected.value) {
-      formData.append('food_allergies[]', 'Tidak Punya');
+      formData.append('food_allergies[]', 'Tidak Ada');
     }
 
     // Send request menggunakan profile store
