@@ -16,7 +16,9 @@
       >
         <!-- Gambar -->
         <div>
-          <label class="block mb-1 text-sm font-medium">Gambar Makanan</label>
+          <label class="block mb-1 text-sm font-medium"
+            >Gambar Makanan (Maksimal 2MB)</label
+          >
           <div class="flex items-center gap-4">
             <div class="relative w-24 h-24 group">
               <img
@@ -43,7 +45,6 @@
                 class="absolute inset-0 opacity-0 cursor-pointer"
               />
             </div>
-            <p class="text-xs text-gray-500">Klik untuk mengganti gambar</p>
           </div>
         </div>
 

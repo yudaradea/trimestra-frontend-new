@@ -18,7 +18,7 @@
         <!-- Foto Profil -->
         <div class="flex flex-col items-center">
           <label class="block mb-2 text-sm font-medium text-gray-700"
-            >Foto Profil</label
+            >Foto Profil (Maksimal 2MB)</label
           >
           <div class="relative w-24 h-24">
             <img
@@ -265,7 +265,7 @@
             </div>
           </div>
           <p class="mt-1 text-xs text-gray-500">
-            Pilih alergi makanan yang Kamu miliki. Jika pilih "Tidak Punya",
+            Pilih alergi makanan yang Kamu miliki. Jika pilih "Tidak Ada",
             unselect terlebih dahulu untuk memilih alergi lain.
           </p>
         </div>
@@ -419,7 +419,7 @@ const onAllergyCheckboxChange = (allergyId) => {
 
   if (!success) {
     toast.warning(
-      'Silakan unselect "Tidak Punya" terlebih dahulu untuk memilih alergi lain',
+      'Silakan unselect "Tidak Ada" terlebih dahulu untuk memilih alergi lain',
       {
         timeout: 3000,
       }
@@ -535,15 +535,12 @@ const handleSaveProfile = async () => {
         formData.append('food_allergies[]', name);
       });
     } else if (isNoAllergySelected.value) {
-      // Jika pilih "Tidak Punya", kirim array kosong atau string khusus
+      // Jika pilih "Tidak Ada", kirim array kosong atau string khusus
       // Sesuaikan dengan kebutuhan backend:
       // Option 1: Kirim empty array (tidak append apa-apa)
       // Option 2: Kirim string khusus
-      formData.append('food_allergies[]', 'tidak punya');
+      formData.append('food_allergies[]', 'Tidak Ada');
     }
-
-    // Debug log
-    console.log('Selected Allergy Names:', allergyNames);
 
     // Send request menggunakan axios
     const response = await api.post('/profile', formData, {

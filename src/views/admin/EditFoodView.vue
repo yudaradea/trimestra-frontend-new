@@ -134,20 +134,28 @@
           <div class="grid grid-cols-2 gap-2 mt-1">
             <div
               v-for="allergy in allergies"
-              :key="allergy.name"
+              :key="allergy.id"
               class="flex items-center"
             >
               <input
                 type="checkbox"
-                :value="allergy.name"
-                v-model="form.allergies"
+                :id="`allergy-${allergy.id}`"
+                :value="allergy.id"
+                :checked="selectedAllergies.includes(allergy.id)"
+                @change="onAllergyCheckboxChange(allergy.id)"
                 class="w-4 h-4 text-teal-600 rounded focus:ring-teal-500"
               />
-              <label class="ml-2 text-sm text-gray-700">{{
-                allergy.name
-              }}</label>
+              <label
+                :for="`allergy-${allergy.id}`"
+                class="ml-2 text-sm text-gray-700 cursor-pointer"
+              >
+                {{ allergy.name }}
+              </label>
             </div>
           </div>
+          <p class="mt-1 text-xs text-gray-500">
+            Pilih alergi makanan yang terkait.
+          </p>
         </div>
 
         <!-- Tombol -->
@@ -173,7 +181,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import axios from '@/lib/axios';
@@ -197,19 +205,83 @@ const form = ref({
   carbohydrates: '',
   ukuran_satuan: '',
   ukuran_satuan_nama: '',
-  allergies: [], // ✅ array of exact allergy names
+  allergies: [], // Akan diisi saat submit dengan nama alergi
 });
 
 const categories = ref([]);
-const allergies = ref([]);
+const allergies = ref([]); // Daftar lengkap alergi dari DB (dengan ID dan Name)
 
-// ✅ Fetch makanan detail
+// --- LOGIKA ALERGI BARU ---
+const selectedAllergies = ref([]); // Array of IDs yang terpilih saat ini
+
+// Mencari ID alergi "Tidak Ada" untuk logika pengecualian
+const noAllergyItem = computed(() =>
+  allergies.value.find((a) => a.name === 'Tidak Ada')
+);
+
+// Cek apakah "Tidak Ada" sedang terpilih
+const isNoAllergySelected = computed(() => {
+  return (
+    noAllergyItem.value &&
+    selectedAllergies.value.includes(noAllergyItem.value.id)
+  );
+});
+
+// Fungsi untuk mendapatkan nama alergi dari ID yang terpilih (Digunakan saat Submit)
+function getAllergyNames() {
+  return selectedAllergies.value
+    .map((id) => allergies.value.find((a) => a.id === id)?.name)
+    .filter((name) => name);
+}
+
+// Handler perubahan checkbox
+function onAllergyCheckboxChange(allergyId) {
+  const isNoAllergy =
+    noAllergyItem.value && allergyId === noAllergyItem.value.id;
+
+  if (selectedAllergies.value.includes(allergyId)) {
+    // Uncheck
+    selectedAllergies.value = selectedAllergies.value.filter(
+      (id) => id !== allergyId
+    );
+  } else {
+    // Check
+    if (isNoAllergy) {
+      // Jika mencentang "Tidak Ada", hapus semua alergi lain
+      selectedAllergies.value = [allergyId];
+    } else if (isNoAllergySelected.value) {
+      // Jika mencentang alergi lain saat "Tidak Ada" terpilih
+      toast.warning(
+        'Silakan unselect "Tidak Ada" terlebih dahulu untuk memilih alergi lain',
+        { timeout: 3000 }
+      );
+      return;
+    } else {
+      // Centang alergi normal
+      selectedAllergies.value.push(allergyId);
+    }
+  }
+}
+// --- AKHIR LOGIKA ALERGI BARU ---
+
+// ✅ Fetch daftar alergi (Diperlukan pertama agar ID ada)
+async function fetchAllergies() {
+  try {
+    const res = await axios.get('/allergy');
+    allergies.value = res.data.data;
+  } catch (err) {
+    toast.error('Gagal memuat daftar alergi');
+  }
+}
+
+// ✅ Fetch makanan detail (Disesuaikan untuk Alergi)
 async function fetchFood() {
   loading.value = true;
   try {
     const res = await axios.get(`/food/${route.params.id}`);
     const data = res.data.data;
 
+    // Reset dan isi form data lainnya
     form.value = {
       name: data.name,
       description: data.description,
@@ -220,8 +292,20 @@ async function fetchFood() {
       carbohydrates: data.carbohydrates,
       ukuran_satuan: data.ukuran_satuan,
       ukuran_satuan_nama: data.ukuran_satuan_nama,
-      allergies: data.allergies || [], // ✅ langsung pakai nama
+      // 'allergies' di form.value tidak perlu diisi di sini karena kita menggunakan selectedAllergies.value
     };
+
+    // Konversi nama alergi lama (dari API) menjadi ID yang saat ini berlaku
+    selectedAllergies.value = [];
+    if (data.allergies && data.allergies.length > 0) {
+      data.allergies.forEach((allergyName) => {
+        // Cari ID alergi berdasarkan nama
+        const allergy = allergies.value.find((a) => a.name === allergyName);
+        if (allergy) {
+          selectedAllergies.value.push(allergy.id);
+        }
+      });
+    }
 
     previewImage.value = data.image_url;
   } catch (err) {
@@ -242,16 +326,6 @@ async function fetchCategories() {
   }
 }
 
-// ✅ Fetch daftar alergi
-async function fetchAllergies() {
-  try {
-    const res = await axios.get('/allergy');
-    allergies.value = res.data.data;
-  } catch (err) {
-    toast.error('Gagal memuat daftar alergi');
-  }
-}
-
 // ✅ Handle file upload
 function handleFileChange(e) {
   const file = e.target.files[0];
@@ -265,31 +339,44 @@ function handleFileChange(e) {
   }
 }
 
-// ✅ Submit update
+// ✅ Submit update (Disesuaikan untuk Alergi)
 async function handleUpdateFood() {
   loading.value = true;
   try {
     const formData = new FormData();
+    const currentAllergyNames = getAllergyNames(); // Ambil NAMA alergi yang BARU terpilih
 
-    // Append fields
+    // Append fields (kecuali kolom alergi lama di form.value)
     Object.entries(form.value).forEach(([key, val]) => {
-      if (key === 'allergies') {
-        val.forEach((v) => formData.append('allergies[]', v));
-      } else {
+      if (key !== 'allergies') {
         formData.append(key, val);
       }
     });
+
+    // Tambahkan Alergi yang BARU terpilih (menggunakan nama, untuk di-sync oleh backend Laravel)
+    if (currentAllergyNames.length > 0) {
+      currentAllergyNames.forEach((name) => {
+        formData.append('allergies[]', name);
+      });
+    } else {
+      // Penting: Kirim array kosong jika tidak ada yang terpilih,
+      // agar backend menghapus semua relasi yang sudah ada.
+      formData.append('allergies[]', '');
+    }
 
     // Append image if changed
     if (imageFile.value) {
       formData.append('image', imageFile.value);
     }
 
+    // Kirim permintaan PUT
     await axios.post(`/food/${route.params.id}?_method=PUT`, formData);
+
     toast.success('Data makanan berhasil diperbarui');
     router.push('/admin/food');
   } catch (err) {
     console.error(err);
+    // Tampilkan pesan error dari backend jika ada
     toast.error(err.response?.data?.message || 'Gagal memperbarui makanan');
   } finally {
     loading.value = false;
@@ -297,9 +384,12 @@ async function handleUpdateFood() {
 }
 
 // ✅ Lifecycle
-onMounted(() => {
+onMounted(async () => {
+  // Muat daftar alergi dulu agar data ID tersedia untuk digunakan di fetchFood
+  await fetchAllergies();
+
+  // Kemudian muat data makanan dan kategori
   fetchFood();
   fetchCategories();
-  fetchAllergies();
 });
 </script>

@@ -27,6 +27,7 @@ import DeviceView from '@/views/DeviceView.vue';
 
 // admin
 import DashboardView from '@/views/admin/DashboardView.vue';
+import AdminEditProfileView from '@/views/admin/AdminEditProfileView.vue';
 import UserView from '@/views/admin/UserView.vue';
 import CreateUserView from '@/views/admin/CreateUserView.vue';
 import EditUserView from '@/views/admin/EditUserView.vue';
@@ -57,6 +58,13 @@ const routes = [
     path: '/admin/dashboard',
     name: 'admin-dashboard',
     component: DashboardView,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+
+  {
+    path: '/admin/profile',
+    name: 'admin-profile',
+    component: AdminEditProfileView,
     meta: { requiresAuth: true, requiresAdmin: true },
   },
 

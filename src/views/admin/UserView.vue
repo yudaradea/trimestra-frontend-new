@@ -1,6 +1,6 @@
 <template>
   <Layout title="Manajemen Users">
-    <div class="p-4 bg-white rounded-lg shadow-sm">
+    <div class="">
       <!-- Top Bar -->
       <div
         class="flex flex-col gap-3 mb-6 sm:flex-row sm:items-center sm:justify-between"
@@ -43,15 +43,36 @@
         </div>
       </div>
 
-      <!-- Loading -->
+      <!-- Loading State -->
       <div
         v-if="loading"
-        class="flex flex-col items-center justify-center py-12"
+        class="flex flex-col items-center justify-center p-16"
       >
-        <div class="text-4xl animate-spin">⏳</div>
+        <!-- Ikon Spinner (Heroicons) -->
+        <svg
+          class="w-12 h-12 text-teal-600 animate-spin"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        <p class="mt-3 text-sm font-medium text-gray-600">Memuat data...</p>
       </div>
 
-      <!-- Table -->
+      <!-- Table (Menggunakan UserTableView yang sudah diperbarui) -->
       <UserTableInuser
         v-else
         :users="users"
@@ -73,29 +94,32 @@
         <div class="flex items-center gap-1">
           <button
             :disabled="meta.current_page === 1"
-            @click="changePage(meta.current_page - 1)"
+            @click="fetchDevices(meta.current_page - 1)"
             class="px-3 py-1 text-gray-600 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50"
           >
             Prev
           </button>
 
-          <button
-            v-for="page in meta.last_page"
-            :key="page"
-            @click="changePage(page)"
-            class="px-3 py-1 rounded"
-            :class="
-              page === meta.current_page
-                ? 'bg-teal-500 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            "
-          >
-            {{ page }}
-          </button>
+          <!-- tampilkan halaman yang terlihat -->
+          <template v-for="(page, i) in visiblePages" :key="i">
+            <button
+              v-if="page !== '...'"
+              @click="fetchDevices(page)"
+              class="px-3 py-1 rounded"
+              :class="
+                page === meta.current_page
+                  ? 'bg-teal-500 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              "
+            >
+              {{ page }}
+            </button>
+            <span v-else class="px-2 text-gray-500 select-none">...</span>
+          </template>
 
           <button
             :disabled="meta.current_page === meta.last_page"
-            @click="changePage(meta.current_page + 1)"
+            @click="fetchDevices(meta.current_page + 1)"
             class="px-3 py-1 text-gray-600 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50"
           >
             Next
@@ -230,7 +254,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import axios from '@/lib/axios';
 import Layout from '@/components/admin/Layout.vue';
 import UserTableInuser from '@/components/admin/UserTableInuser.vue';
@@ -238,6 +262,37 @@ import Modal from '@/components/Modal.vue';
 import { useLocation } from '@/composables/useLocation';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
+
+// pagination visible pages
+const visiblePages = computed(() => {
+  const total = meta.value.last_page || 1;
+  const current = meta.value.current_page || 1;
+  const delta = 3; // jumlah halaman di kiri-kanan halaman aktif
+  const range = [];
+
+  // batas awal dan akhir
+  const start = Math.max(2, current - delta);
+  const end = Math.min(total - 1, current + delta);
+
+  // halaman pertama
+  range.push(1);
+
+  // tambahkan elipsis sebelum start jika jauh dari 2
+  if (start > 2) range.push('...');
+
+  // isi range tengah
+  for (let i = start; i <= end; i++) {
+    range.push(i);
+  }
+
+  // tambahkan elipsis sebelum halaman terakhir jika belum dekat
+  if (end < total - 1) range.push('...');
+
+  // halaman terakhir (hanya jika total > 1)
+  if (total > 1) range.push(total);
+
+  return range;
+});
 
 const toast = useToast();
 

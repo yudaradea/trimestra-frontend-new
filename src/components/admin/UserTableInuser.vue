@@ -1,74 +1,176 @@
 <template>
-  <div class="overflow-x-auto">
-    <table class="min-w-full text-sm border rounded">
-      <thead class="text-gray-600 bg-gray-50">
-        <tr>
-          <th class="px-4 py-2">Foto</th>
-          <th class="px-4 py-2">Nama</th>
-          <th class="px-4 py-2">Email</th>
-          <th
-            class="px-4 py-2 cursor-pointer select-none"
-            @click="$emit('sort', 'location')"
+  <div class="bg-white border border-gray-200 rounded-lg shadow-sm">
+    <div class="overflow-x-auto rounded-lg">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="text-gray-600 bg-gray-50">
+          <tr>
+            <th
+              scope="col"
+              class="px-6 py-4 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+            >
+              Foto
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-4 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+            >
+              Nama
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-4 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+            >
+              Email
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-4 text-xs font-medium tracking-wider text-left text-gray-500 uppercase cursor-pointer"
+              @click="$emit('sort', 'location')"
+            >
+              Lokasi
+              <span v-if="sortBy === 'location'">
+                <span v-if="sortDirection === 'asc'">▲</span>
+                <span v-else>▼</span>
+              </span>
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-4 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+            >
+              BMI
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-4 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+            >
+              Tanggal Daftar
+            </th>
+            <th scope="col" class="relative px-6 py-4">Aksi</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <!-- data ada -->
+          <tr
+            v-for="user in users"
+            :key="user.id"
+            class="transition-all hover:bg-gray-50"
           >
-            Lokasi
-            <span v-if="sortBy === 'location'">
-              <span v-if="sortDirection === 'asc'">▲</span>
-              <span v-else>▼</span>
-            </span>
-          </th>
-          <th class="px-4 py-2">BMI</th>
-          <th class="px-4 py-2">Tanggal Daftar</th>
-          <th class="px-4 py-2">Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- data ada -->
-        <tr
-          v-for="user in users"
-          :key="user.id"
-          class="border-t hover:bg-gray-50"
-        >
-          <td class="px-4 py-2">
-            <img
-              :src="user.profile?.foto_profile"
-              alt="foto"
-              class="object-cover w-10 h-10 rounded-full"
-            />
-          </td>
-          <td class="px-4 py-2 font-medium">{{ user.name }}</td>
-          <td class="px-4 py-2">{{ user.email }}</td>
-          <td class="px-4 py-2">{{ user.profile?.location?.province_name }}</td>
-          <td class="px-4 py-2">
-            {{ user.profile?.calculated_bmi?.bmi }}
-            ({{ user.profile?.calculated_bmi?.bmi_category }})
-          </td>
-          <td class="px-4 py-2">
-            {{ new Date(user.created_at).toLocaleDateString('id-ID') }}
-          </td>
-          <td class="flex gap-2 px-4 py-2">
-            <button
-              @click="$emit('edit', user)"
-              class="px-2 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
+            <td
+              class="px-6 py-6 text-sm font-medium text-gray-900 whitespace-nowrap"
             >
-              Edit
-            </button>
-            <button
-              @click="$emit('delete', user)"
-              class="px-2 py-1 text-sm text-white bg-red-500 rounded hover:bg-red-600"
+              <img
+                :src="user.profile?.foto_profile"
+                alt="foto"
+                class="object-cover w-10 h-10 rounded-full"
+              />
+            </td>
+            <td
+              class="px-6 py-6 text-sm font-medium text-gray-900 whitespace-nowrap"
             >
-              Delete
-            </button>
-          </td>
-        </tr>
+              {{ user.name }}
+            </td>
+            <td
+              class="px-6 py-6 text-sm font-medium text-gray-900 whitespace-nowrap"
+            >
+              {{ user.email }}
+            </td>
+            <td
+              class="px-6 py-6 text-sm font-medium text-gray-900 whitespace-nowrap"
+            >
+              {{ user.profile?.location?.province_name }}
+            </td>
+            <td
+              class="px-6 py-6 text-sm font-medium text-gray-900 whitespace-nowrap"
+            >
+              {{ user.profile?.calculated_bmi?.bmi }}
+              ({{ user.profile?.calculated_bmi?.bmi_category }})
+            </td>
+            <td
+              class="px-6 py-6 text-sm font-medium text-gray-900 whitespace-nowrap"
+            >
+              {{ new Date(user.created_at).toLocaleDateString('id-ID') }}
+            </td>
+            <td class="flex gap-2 px-4 py-6">
+              <button
+                @click="$emit('edit', user)"
+                class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 transition-all bg-white rounded-md shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              >
+                <!-- Ikon Edit (Heroicons) -->
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  class="w-4 h-4"
+                >
+                  <path
+                    d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
+                  />
+                </svg>
+                Edit
+              </button>
+              <button
+                @click="$emit('delete', user)"
+                class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-red-700 transition-all rounded-md shadow-sm bg-red-50 ring-1 ring-inset ring-red-200 hover:bg-red-100"
+              >
+                <!-- Ikon Hapus (Heroicons) -->
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  class="w-4 h-4"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.58.11-2.368.11a.75.75 0 00-.73.73V5.8c0 .414.336.75.75.75h13.5a.75.75 0 00.75-.75v-.764a.75.75 0 00-.73-.73c-.788 0-1.573-.033-2.368-.11v-.443A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.5.66 1.5 1.5V6h-3V5.5A1.5 1.5 0 0110 4zM8.5 8.25a.75.75 0 00-1.5 0v5.5a.75.75 0 001.5 0v-5.5zM11.5 8.25a.75.75 0 00-1.5 0v5.5a.75.75 0 001.5 0v-5.5z"
+                    clip-rule="evenodd"
+                  />
+                  <path
+                    d="M1.956 7.362A.75.75 0 013.23 6.75h10.54a.75.75 0 011.274.612l-1.002 7.502A2.25 2.25 0 0111.796 17H5.204a2.25 2.25 0 01-2.244-2.136L1.956 7.362z"
+                  />
+                </svg>
+                Hapus
+              </button>
+            </td>
+          </tr>
 
-        <!-- data kosong -->
-        <tr v-if="users.length === 0">
-          <td colspan="7" class="px-4 py-4 italic text-center text-gray-500">
-            Tidak ada data
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          <!-- data kosong -->
+          <tr v-if="users.length === 0">
+            <td :colspan="5">
+              <div
+                class="flex flex-col items-center justify-center p-12 text-center"
+              >
+                <!-- Ikon Tag (Heroicons) -->
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-12 h-12 text-gray-400"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.737.563l3.431-1.372c.957-.386 1.591-1.262 1.591-2.257v-4.318c0-.597-.237-1.17-.659-1.591L14.409 3.659A2.25 2.25 0 0012.818 3H9.568z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 6h.008v.008H6V6z"
+                  />
+                </svg>
+                <h3 class="mt-3 font-semibold text-gray-800 text-md">
+                  Tidak Ada Kategori
+                </h3>
+                <p class="mt-1 text-sm text-gray-500">
+                  Belum ada kategori makanan yang ditambahkan.
+                </p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 

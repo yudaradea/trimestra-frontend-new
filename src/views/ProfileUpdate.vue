@@ -23,8 +23,9 @@
         <!-- Foto Profil -->
         <div class="flex flex-col items-center">
           <label class="block mb-2 text-sm font-medium text-gray-700"
-            >Foto Profil</label
+            >Foto Profil (Maksimal 2MB)</label
           >
+
           <div class="relative w-24 h-24 group">
             <img
               v-if="previewImage"
@@ -303,7 +304,7 @@
             </div>
           </div>
           <p class="mt-1 text-xs text-gray-500">
-            Pilih alergi makanan yang Kamu miliki. Jika pilih "Tidak Punya",
+            Pilih alergi makanan yang Kamu miliki. Jika pilih "Tidak Ada",
             unselect terlebih dahulu untuk memilih alergi lain.
           </p>
         </div>
@@ -496,7 +497,7 @@ const onAllergyCheckboxChange = (allergyId) => {
 
   if (!success) {
     toast.warning(
-      'Silakan unselect "Tidak Punya" terlebih dahulu untuk memilih alergi lain',
+      'Silakan unselect "Tidak Ada" terlebih dahulu untuk memilih alergi lain',
       {
         timeout: 3000,
       }
@@ -695,7 +696,7 @@ const handleUpdateProfile = async () => {
         formData.append('food_allergies[]', name);
       });
     } else if (isNoAllergySelected.value) {
-      formData.append('food_allergies[]', 'tidak punya');
+      formData.append('food_allergies[]', 'Tidak Ada');
     }
 
     // Send request menggunakan profile store

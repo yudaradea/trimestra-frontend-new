@@ -1,10 +1,10 @@
 <template>
-  <Layout title="Edit User">
+  <Layout title="Perbarui Profil">
     <div class="w-full max-w-5xl p-8 mx-auto bg-white shadow-lg rounded-xl">
       <header class="mb-8">
-        <h1 class="text-3xl font-bold text-teal-700">⚙️ Edit Data Pengguna</h1>
+        <h1 class="text-3xl font-bold text-teal-700">✏️ Edit Profil</h1>
         <p class="mt-1 text-gray-600">
-          Perbarui informasi akun dan detail profil dari pengguna ini.
+          Perbarui semua informasi detail profil Anda.
         </p>
         <div class="h-1 mt-4 bg-teal-100 rounded"></div>
       </header>
@@ -14,10 +14,10 @@
         class="flex flex-col items-center justify-center py-20"
       >
         <div class="text-5xl animate-spin">⏳</div>
-        <span class="mt-4 text-lg text-gray-600">Memuat data pengguna...</span>
+        <span class="mt-4 text-lg text-gray-600">Memuat data profil...</span>
       </div>
 
-      <form v-else @submit.prevent="handleUpdateUser" class="space-y-10">
+      <form v-else @submit.prevent="handleUpdateProfile" class="space-y-10">
         <section class="flex items-start pb-8 space-x-10 border-b">
           <div class="flex flex-col items-center flex-shrink-0 w-48">
             <label class="block mb-4 text-base font-semibold text-gray-700"
@@ -59,7 +59,7 @@
             </p>
           </div>
 
-          <div class="grid flex-grow grid-cols-2 gap-4">
+          <div class="flex-grow space-y-4">
             <div>
               <label for="name" class="block text-sm font-medium text-teal-600"
                 >Nama Lengkap</label
@@ -67,7 +67,7 @@
               <input
                 type="text"
                 id="name"
-                v-model="form.name"
+                v-model="profileData.name"
                 required
                 class="block w-full px-4 py-2 mt-1 transition duration-150 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
               />
@@ -80,7 +80,7 @@
               <input
                 type="email"
                 id="email"
-                v-model="form.email"
+                v-model="profileData.email"
                 required
                 class="block w-full px-4 py-2 mt-1 transition duration-150 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
               />
@@ -93,7 +93,7 @@
               <input
                 type="tel"
                 id="no_hp"
-                v-model="form.no_hp"
+                v-model="profileData.no_hp"
                 placeholder="Masukkan nomor HP"
                 class="block w-full px-4 py-2 mt-1 transition duration-150 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
               />
@@ -101,31 +101,17 @@
 
             <div>
               <label
-                for="birth_date"
+                for="tanggal_lahir"
                 class="block text-sm font-medium text-teal-600"
                 >Tanggal Lahir</label
               >
               <input
                 type="date"
-                id="birth_date"
-                v-model="form.birth_date"
+                id="tanggal_lahir"
+                v-model="profileData.birth_date"
                 required
                 class="block w-full px-4 py-2 mt-1 transition duration-150 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
               />
-            </div>
-
-            <div>
-              <label for="role" class="block text-sm font-medium text-teal-600"
-                >Role Pengguna</label
-              >
-              <select
-                v-model="form.role"
-                id="role"
-                class="block w-full px-4 py-2 mt-1 transition duration-150 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
-              >
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-              </select>
             </div>
           </div>
         </section>
@@ -133,51 +119,20 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-6">
           <section class="space-y-6">
             <h2 class="pb-2 text-xl font-semibold text-gray-700 border-b">
-              Keamanan Akun & Detail Kesehatan
+              Detail Kesehatan
             </h2>
 
             <div>
               <label
-                for="password"
-                class="block text-sm font-medium text-teal-600"
-                >Password Baru (opsional)</label
-              >
-              <input
-                v-model="form.password"
-                type="password"
-                id="password"
-                class="block w-full px-4 py-2 mt-1 transition duration-150 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
-              />
-              <p class="mt-1 text-xs text-gray-500">
-                Kosongkan jika tidak ingin mengubah password
-              </p>
-            </div>
-
-            <div>
-              <label
-                for="password_confirmation"
-                class="block text-sm font-medium text-teal-600"
-                >Konfirmasi Password Baru</label
-              >
-              <input
-                v-model="form.password_confirmation"
-                type="password"
-                id="password_confirmation"
-                class="block w-full px-4 py-2 mt-1 transition duration-150 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
-              />
-            </div>
-
-            <div>
-              <label
-                for="weight"
+                for="berat_badan"
                 class="block text-sm font-medium text-teal-600"
                 >Berat Badan</label
               >
               <div class="relative mt-1">
                 <input
                   type="number"
-                  id="weight"
-                  v-model="form.weight"
+                  id="berat_badan"
+                  v-model="profileData.weight"
                   required
                   min="20"
                   max="300"
@@ -194,15 +149,15 @@
 
             <div>
               <label
-                for="height"
+                for="tinggi_badan"
                 class="block text-sm font-medium text-teal-600"
                 >Tinggi Badan</label
               >
               <div class="relative mt-1">
                 <input
                   type="number"
-                  id="height"
-                  v-model="form.height"
+                  id="tinggi_badan"
+                  v-model="profileData.height"
                   required
                   min="50"
                   max="300"
@@ -226,7 +181,7 @@
                   <input
                     type="radio"
                     value="<7"
-                    v-model="form.sleep_duration"
+                    v-model="profileData.sleep_duration"
                     class="text-teal-600 focus:ring-teal-500"
                   />
                   <span class="ml-3 text-sm text-gray-700"
@@ -237,7 +192,7 @@
                   <input
                     type="radio"
                     value="7-9"
-                    v-model="form.sleep_duration"
+                    v-model="profileData.sleep_duration"
                     class="text-teal-600 focus:ring-teal-500"
                   />
                   <span class="ml-3 text-sm text-gray-700">7-9 jam</span>
@@ -246,30 +201,24 @@
                   <input
                     type="radio"
                     value="9-10"
-                    v-model="form.sleep_duration"
+                    v-model="profileData.sleep_duration"
                     class="text-teal-600 focus:ring-teal-500"
                   />
                   <span class="ml-3 text-sm text-gray-700">9-10 jam</span>
                 </label>
               </div>
             </div>
-          </section>
-
-          <section class="space-y-6">
-            <h2 class="pb-2 text-xl font-semibold text-gray-700 border-b">
-              Lokasi & Status Kehamilan
-            </h2>
 
             <div class="pt-2">
               <label class="block text-sm font-medium text-teal-600"
-                >Apakah Pengguna Sedang Hamil?</label
+                >Apakah Kamu Sedang Hamil?</label
               >
               <div class="flex p-3 mt-2 space-x-6 border rounded-lg bg-gray-50">
                 <label class="flex items-center">
                   <input
                     type="radio"
                     :value="0"
-                    v-model="form.is_pregnant"
+                    v-model="profileData.is_pregnant"
                     class="text-teal-600 focus:ring-teal-500"
                   />
                   <span class="ml-2 text-sm font-medium text-gray-700"
@@ -280,7 +229,7 @@
                   <input
                     type="radio"
                     :value="1"
-                    v-model="form.is_pregnant"
+                    v-model="profileData.is_pregnant"
                     class="text-teal-600 focus:ring-teal-500"
                   />
                   <span class="ml-2 text-sm font-medium text-gray-700">Ya</span>
@@ -288,21 +237,24 @@
               </div>
             </div>
 
-            <div v-if="form.is_pregnant == 1" class="pt-4 space-y-4 border-t">
+            <div
+              v-if="profileData.is_pregnant == 1"
+              class="pt-4 space-y-4 border-t"
+            >
               <h3 class="text-lg font-semibold text-teal-600">
                 Detail Kehamilan
               </h3>
               <div>
                 <label
-                  for="weeks"
+                  for="usia_kehamilan"
                   class="block text-sm font-medium text-teal-600"
                   >Usia Kehamilan</label
                 >
                 <div class="relative mt-1">
                   <input
                     type="number"
-                    id="weeks"
-                    v-model="form.weeks"
+                    id="usia_kehamilan"
+                    v-model="profileData.weeks"
                     required
                     min="1"
                     max="42"
@@ -326,13 +278,19 @@
                   <input
                     type="date"
                     id="hpht"
-                    v-model="form.hpht"
+                    v-model="profileData.hpht"
                     required
                     class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
                   />
                 </div>
               </div>
             </div>
+          </section>
+
+          <section class="space-y-6">
+            <h2 class="pb-2 text-xl font-semibold text-gray-700 border-b">
+              Lokasi & Alergi
+            </h2>
 
             <div>
               <label class="block text-sm font-medium text-teal-600"
@@ -340,7 +298,7 @@
               >
               <div class="mt-2 space-y-3">
                 <select
-                  v-model="form.province_id"
+                  v-model="profileData.province_id"
                   required
                   class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500"
                 >
@@ -355,9 +313,9 @@
                 </select>
 
                 <select
-                  v-model="form.regency_id"
+                  v-model="profileData.regency_id"
                   required
-                  :disabled="!form.province_id"
+                  :disabled="!profileData.province_id"
                   class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <option value="">Pilih Kabupaten/Kota</option>
@@ -371,9 +329,9 @@
                 </select>
 
                 <select
-                  v-model="form.district_id"
+                  v-model="profileData.district_id"
                   required
-                  :disabled="!form.regency_id"
+                  :disabled="!profileData.regency_id"
                   class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <option value="">Pilih Kecamatan</option>
@@ -387,9 +345,9 @@
                 </select>
 
                 <select
-                  v-model="form.village_id"
+                  v-model="profileData.village_id"
                   required
-                  :disabled="!form.district_id"
+                  :disabled="!profileData.district_id"
                   class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <option value="">Pilih Kelurahan/Desa</option>
@@ -433,8 +391,8 @@
                 </div>
               </div>
               <p class="mt-2 text-xs text-gray-500">
-                Pilih alergi makanan user. **Pastikan opsi "Tidak Ada"
-                di-unselect jika memilih alergi lain.**
+                Pilih alergi makanan yang Kamu miliki. **Pastikan opsi "Tidak
+                Ada" di-unselect jika memilih alergi lain.**
               </p>
             </div>
           </section>
@@ -443,7 +401,7 @@
         <div class="flex justify-end pt-6 space-x-4 border-t">
           <button
             type="button"
-            @click="router.back()"
+            @click="handleCancel"
             class="px-8 py-3 font-semibold text-teal-600 transition bg-white border-2 border-teal-500 rounded-full shadow-md hover:bg-teal-50"
           >
             Batal
@@ -451,7 +409,7 @@
 
           <button
             type="submit"
-            :disabled="loading"
+            :disabled="loading || !hasChanges"
             class="px-8 py-3 font-semibold text-white transition bg-teal-600 rounded-full shadow-lg hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-xl"
           >
             <span v-if="loading" class="mr-2 animate-spin">🔄</span>
@@ -464,21 +422,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref, onMounted, watch, computed } from 'vue';
+import { useProfileStore } from '@/stores/useProfileStore';
+import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
-import axios from '@/lib/axios';
 import { useLocation } from '@/composables/useLocation';
 import { useAllergies } from '@/composables/useAllergies';
-import Layout from '@/components/admin/Layout.vue';
+// import Header from '@/components/Header.vue'; // Dihapus/diganti
+// import BottomNav from '@/components/BottomNav.vue'; // Dihapus/diganti
+import Layout from '@/components/admin/Layout.vue'; // Menggunakan Layout Admin
 
-const route = useRoute();
 const router = useRouter();
 const toast = useToast();
-const loading = ref(false);
-const initialLoading = ref(true);
+const profileStore = useProfileStore();
 
-// Composable lokasi
+// Composables
 const {
   provinces,
   regencies,
@@ -490,16 +448,72 @@ const {
   fetchVillages,
 } = useLocation();
 
-// Composable alergi
-const { allergies, selectedAllergies, fetchAllergies, handleAllergyChange } =
-  useAllergies();
+const {
+  allergies,
+  selectedAllergies,
+  isNoAllergySelected,
+  fetchAllergies,
+  handleAllergyChange,
+  getAllergyNames,
+} = useAllergies();
 
+const loading = ref(false);
+const previewImage = ref(null);
+const originalData = ref(null);
+const initialLoading = ref(true); // Loading saat pertama kali load data
+
+const profileData = ref({
+  name: '',
+  email: '',
+  birth_date: '',
+  province_id: '',
+  regency_id: '',
+  district_id: '',
+  village_id: '',
+  height: '',
+  weight: '',
+  foto_profile: null,
+  no_hp: '',
+  sleep_duration: '',
+  is_pregnant: 0,
+  weeks: '',
+  hpht: '',
+});
+
+// Computed untuk cek apakah ada perubahan
+const hasChanges = computed(() => {
+  if (!originalData.value) return false;
+
+  // Cek perubahan pada field biasa
+  const fieldsChanged = Object.keys(profileData.value).some((key) => {
+    if (key === 'foto_profile') return !!profileData.value[key]; // Ada file baru
+
+    const current = profileData.value[key];
+    const original = originalData.value[key];
+
+    // Konversi ke string untuk perbandingan yang konsisten
+    return String(current || '') !== String(original || '');
+  });
+
+  // Cek perubahan alergi
+  const originalAllergies = originalData.value.food_allergies || [];
+  const currentAllergies = getAllergyNames();
+
+  const allergiesChanged =
+    originalAllergies.length !== currentAllergies.length ||
+    !originalAllergies.every((a) => currentAllergies.includes(a)) ||
+    !currentAllergies.every((a) => originalAllergies.includes(a));
+
+  return fieldsChanged || allergiesChanged;
+});
+
+// Handler untuk checkbox change dengan toast
 const onAllergyCheckboxChange = (allergyId) => {
   const success = handleAllergyChange(allergyId);
 
   if (!success) {
     toast.warning(
-      'Silakan unselect "Tidak Punya" terlebih dahulu untuk memilih alergi lain',
+      'Silakan unselect "Tidak Ada" terlebih dahulu untuk memilih alergi lain',
       {
         timeout: 3000,
       }
@@ -507,245 +521,230 @@ const onAllergyCheckboxChange = (allergyId) => {
   }
 };
 
-// State form
-const form = ref({
-  name: '',
-  email: '',
-  role: '',
-  password: '',
-  password_confirmation: '',
-  birth_date: '',
-  height: '',
-  weight: '',
-  no_hp: '',
-  sleep_duration: '',
-  is_pregnant: 0,
-  weeks: '',
-  hpht: '',
-  province_id: '',
-  regency_id: '',
-  district_id: '',
-  village_id: '',
-  foto_profile: null,
+// Load data profil
+const loadProfile = async () => {
+  initialLoading.value = true;
+  try {
+    await profileStore.fetchProfile();
+    const profileResponse = profileStore.profile;
+
+    if (profileResponse) {
+      // Data user (name, email) langsung di level atas
+      // Data detail profil ada di profileResponse.profile
+      const profile = profileResponse.profile || {};
+      const location = profile.location || {};
+
+      // Set profile data
+      profileData.value = {
+        name: profileResponse.name || '',
+        email: profileResponse.email || '',
+        birth_date: profile.birth_date || '',
+        province_id: location.province_id || '',
+        regency_id: location.regency_id || '',
+        district_id: location.district_id || '',
+        village_id: location.village_id || '',
+        height: profile.height || '',
+        weight: profile.weight || '',
+        foto_profile: null,
+        no_hp: profile.no_hp || '',
+        sleep_duration: profile.sleep_duration || '',
+        is_pregnant: profile.is_pregnant ? 1 : 0,
+        weeks: profile.weeks || '',
+        hpht: profile.hpht || '',
+      };
+
+      // Set foto preview jika ada
+      if (profile.foto_profile) {
+        previewImage.value = profile.foto_profile;
+      }
+
+      // Load location data secara bertahap
+      if (location.province_id) {
+        await fetchRegencies(location.province_id);
+        if (location.regency_id) {
+          await fetchDistricts(location.regency_id);
+          if (location.district_id) {
+            await fetchVillages(location.district_id);
+          }
+        }
+      }
+
+      // Set allergies
+      if (profile.food_allergies && profile.food_allergies.length > 0) {
+        // Cari ID alergi berdasarkan nama
+        profile.food_allergies.forEach((allergyName) => {
+          const allergy = allergies.value.find((a) => a.name === allergyName);
+          if (allergy && !selectedAllergies.value.includes(allergy.id)) {
+            selectedAllergies.value.push(allergy.id);
+          }
+        });
+      }
+
+      // Simpan data original untuk deteksi perubahan
+      originalData.value = {
+        ...profileData.value,
+        food_allergies: profile.food_allergies || [],
+      };
+    }
+  } catch (error) {
+    console.error('Load profile error:', error);
+    toast.error('Gagal memuat data profil');
+  } finally {
+    initialLoading.value = false;
+  }
+};
+
+onMounted(async () => {
+  try {
+    await Promise.all([fetchProvinces(), fetchAllergies()]);
+    await loadProfile();
+  } catch (error) {
+    toast.error('Gagal memuat data awal');
+  }
 });
 
-// Preview foto
-const previewImage = ref(null);
-
-// Handle upload foto
-function handleFileChange(e) {
-  const file = e.target.files[0];
-  if (file) {
-    // Validasi tipe file
-    const validTypes = [
-      'image/jpeg',
-      'image/jpg',
-      'image/png',
-      'image/gif',
-      'image/webp',
-    ];
-    if (!validTypes.includes(file.type)) {
-      toast.error('Format file harus berupa gambar (JPG, PNG, GIF, atau WEBP)');
-      e.target.value = '';
-      return;
+// Watchers untuk cascading dropdown
+watch(
+  () => profileData.value.province_id,
+  async (newProvinceId, oldProvinceId) => {
+    if (newProvinceId && newProvinceId !== oldProvinceId) {
+      try {
+        await fetchRegencies(newProvinceId);
+        // Reset hanya jika user yang mengubah (bukan saat load data)
+        if (oldProvinceId) {
+          profileData.value.regency_id = '';
+          profileData.value.district_id = '';
+          profileData.value.village_id = '';
+          districts.value = [];
+          villages.value = [];
+        }
+      } catch (error) {
+        toast.error('Gagal memuat data kabupaten/kota');
+      }
     }
+  }
+);
 
-    // Validasi ukuran
+watch(
+  () => profileData.value.regency_id,
+  async (newRegencyId, oldRegencyId) => {
+    if (newRegencyId && newRegencyId !== oldRegencyId) {
+      try {
+        await fetchDistricts(newRegencyId);
+        if (oldRegencyId) {
+          profileData.value.district_id = '';
+          profileData.value.village_id = '';
+          villages.value = [];
+        }
+      } catch (error) {
+        toast.error('Gagal memuat data kecamatan');
+      }
+    }
+  }
+);
+
+watch(
+  () => profileData.value.district_id,
+  async (newDistrictId, oldDistrictId) => {
+    if (newDistrictId && newDistrictId !== oldDistrictId) {
+      try {
+        await fetchVillages(newDistrictId);
+        if (oldDistrictId) {
+          profileData.value.village_id = '';
+        }
+      } catch (error) {
+        toast.error('Gagal memuat data kelurahan/desa');
+      }
+    }
+  }
+);
+
+const handleFileChange = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    // Validasi file
     const maxSize = 2 * 1024 * 1024; // 2MB
     if (file.size > maxSize) {
       toast.error('Ukuran file maksimal 2MB');
-      e.target.value = '';
       return;
     }
 
     const reader = new FileReader();
-    reader.onload = (ev) => {
-      previewImage.value = ev.target.result;
+    reader.onload = (e) => {
+      previewImage.value = e.target.result;
     };
     reader.readAsDataURL(file);
-    form.value.foto_profile = file;
+    profileData.value.foto_profile = file;
   }
-}
+};
 
-// Load data user untuk edit
-async function loadUser() {
+const handleUpdateProfile = async () => {
+  loading.value = true;
+
   try {
-    const res = await axios.get(`/user/${route.params.id}`);
-    const user = res.data.data;
-    form.value.name = user.name;
-    form.value.email = user.email;
-    form.value.role = user.role || '';
-
-    // Profile data - akses dari user.profile
-    const profile = user.profile || {};
-    const location = profile.location || {};
-
-    form.value.birth_date = profile.birth_date || '';
-    form.value.height = profile.height || '';
-    form.value.weight = profile.weight || '';
-    form.value.no_hp = profile.no_hp || '';
-    form.value.sleep_duration = profile.sleep_duration || '';
-    form.value.is_pregnant = profile.is_pregnant ? 1 : 0;
-    form.value.weeks = profile.weeks || '';
-    form.value.hpht = profile.hpht || '';
-
-    // Location data
-    form.value.province_id = location.province_id || '';
-    form.value.regency_id = location.regency_id || '';
-    form.value.district_id = location.district_id || '';
-    form.value.village_id = location.village_id || '';
-
-    // Foto profil
-    if (profile.foto_profile) {
-      previewImage.value = profile.foto_profile;
-    }
-
-    // Load lokasi bertingkat
-    if (form.value.province_id) {
-      await fetchRegencies(form.value.province_id);
-      if (form.value.regency_id) {
-        await fetchDistricts(form.value.regency_id);
-        if (form.value.district_id) {
-          await fetchVillages(form.value.district_id);
-        }
+    // Validasi
+    if (profileData.value.is_pregnant == 1) {
+      if (!profileData.value.weeks || !profileData.value.hpht) {
+        toast.error('Mohon lengkapi data kehamilan');
+        loading.value = false;
+        return;
       }
     }
 
-    // Set alergi - PENTING: Map dari NAME ke ID
-    if (profile.food_allergies && profile.food_allergies.length > 0) {
-      // Clear selected allergies first
-      selectedAllergies.value = [];
-
-      // Map allergy names to IDs
-      profile.food_allergies.forEach((allergyName) => {
-        const allergy = allergies.value.find((a) => a.name === allergyName);
-        if (allergy && !selectedAllergies.value.includes(allergy.id)) {
-          selectedAllergies.value.push(allergy.id);
-        }
-      });
-    }
-  } catch (err) {
-    console.error('Load user error:', err);
-    toast.error('Gagal memuat data user');
-  }
-}
-
-// Submit update
-async function handleUpdateUser() {
-  loading.value = true;
-  try {
+    // Create FormData
     const formData = new FormData();
 
-    // Add all form fields
-    Object.keys(form.value).forEach((key) => {
-      const value = form.value[key];
+    // Add all profile data
+    Object.keys(profileData.value).forEach((key) => {
+      const value = profileData.value[key];
 
-      // Skip password fields if empty
-      if ((key === 'password' || key === 'password_confirmation') && !value) {
-        return;
-      }
-
-      // Skip foto_profile, handle separately
       if (key === 'foto_profile') {
-        return;
-      }
-
-      if (value !== '' && value !== null && value !== undefined) {
+        if (value) formData.append(key, value);
+      } else if (value !== '' && value !== null && value !== undefined) {
         formData.append(key, value);
       }
     });
 
-    // Add foto_profile if new file uploaded
-    if (form.value.foto_profile && form.value.foto_profile instanceof File) {
-      formData.append('foto_profile', form.value.foto_profile);
-    }
-
-    // Add allergies dengan NAME (bukan ID)
-    const allergyNames = selectedAllergies.value
-      .map((id) => allergies.value.find((a) => a.id === id)?.name)
-      .filter((name) => name);
-
+    // Add allergies dengan NAME bukan ID
+    const allergyNames = getAllergyNames();
     if (allergyNames.length > 0) {
       allergyNames.forEach((name) => {
         formData.append('food_allergies[]', name);
       });
+    } else if (isNoAllergySelected.value) {
+      // PERBAIKAN: Menggunakan 'Tidak Punya' sesuai dengan data yang diharapkan di DB
+      formData.append('food_allergies[]', 'Tidak Ada');
     }
 
-    // Send request
-    await axios.post(`/user/${route.params.id}?_method=PUT`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    // Send request menggunakan profile store
+    await profileStore.updateProfile(formData);
 
-    toast.success('User berhasil diupdate!');
-    router.push('/admin/users');
-  } catch (err) {
-    console.error('Update error:', err);
-    console.error('Error response:', err.response?.data);
+    toast.success('Profil berhasil diperbarui!');
 
-    if (err.response?.data?.errors) {
-      const errorMessages = Object.values(err.response.data.errors).flat();
-      toast.error(errorMessages.join(', '));
-    } else {
-      toast.error(err.response?.data?.message || 'Gagal update user');
-    }
+    // Update original data setelah berhasil save
+    originalData.value = {
+      ...profileData.value,
+      food_allergies: allergyNames,
+    };
+
+    // Reset foto_profile karena sudah disimpan
+    profileData.value.foto_profile = null;
+
+    // Redirect atau refresh
+    router.push('/admin/profile');
+  } catch (error) {
+    console.error('Update profile error:', error);
+    const message =
+      error.response?.data?.message ||
+      error.message ||
+      'Gagal memperbarui profil';
+    toast.error(message);
   } finally {
     loading.value = false;
   }
-}
+};
 
-// Watchers untuk cascading dropdown
-watch(
-  () => form.value.province_id,
-  async (newVal, oldVal) => {
-    if (newVal && newVal !== oldVal) {
-      await fetchRegencies(newVal);
-      if (oldVal) {
-        form.value.regency_id = '';
-        form.value.district_id = '';
-        form.value.village_id = '';
-      }
-    }
-  }
-);
-
-watch(
-  () => form.value.regency_id,
-  async (newVal, oldVal) => {
-    if (newVal && newVal !== oldVal) {
-      await fetchDistricts(newVal);
-      if (oldVal) {
-        form.value.district_id = '';
-        form.value.village_id = '';
-      }
-    }
-  }
-);
-
-watch(
-  () => form.value.district_id,
-  async (newVal, oldVal) => {
-    if (newVal && newVal !== oldVal) {
-      await fetchVillages(newVal);
-      if (oldVal) {
-        form.value.village_id = '';
-      }
-    }
-  }
-);
-
-// Lifecycle
-onMounted(async () => {
-  try {
-    // Load data secara parallel
-    await Promise.all([fetchProvinces(), fetchAllergies()]);
-
-    // Load user data setelah allergies dimuat
-    await loadUser();
-  } catch (error) {
-    console.error('Failed to load initial data:', error);
-    toast.error('Gagal memuat data awal');
-  } finally {
-    initialLoading.value = false;
-  }
-});
+const handleCancel = () => {
+  router.back();
+};
 </script>

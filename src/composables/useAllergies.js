@@ -7,7 +7,7 @@ export function useAllergies() {
   const loading = ref(false);
 
   const noAllergyItem = computed(() =>
-    allergies.value.find((a) => a.name.toLowerCase() === 'tidak punya')
+    allergies.value.find((a) => a.name === 'Tidak Ada')
   );
 
   const noAllergyId = computed(() => noAllergyItem.value?.id || null);

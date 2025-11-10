@@ -2,7 +2,7 @@
   <div class="relative w-full">
     <button
       @click="isOpen = !isOpen"
-      class="flex items-center justify-between w-full px-4 py-3 text-left bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
+      class="flex items-center justify-between w-full px-4 py-[10px] text-left bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
     >
       <span>{{ selectedOption.label }}</span>
       <svg
